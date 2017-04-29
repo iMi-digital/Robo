@@ -1,8 +1,6 @@
 <?php
 namespace Robo\Task\Base;
 
-use Robo\Contract\ProgressIndicatorAwareInterface;
-use Robo\Common\ProgressIndicatorAwareTrait;
 use Robo\Contract\CommandInterface;
 use Robo\Contract\PrintedInterface;
 use Robo\Result;
@@ -22,63 +20,109 @@ use Symfony\Component\Process\Process;
  *   ->run();
  * ?>
  * ```
- *
- *
- * @method \Robo\Task\Base\ParallelExec timeout(int $timeout) stops process if it runs longer then `$timeout` (seconds)
- * @method \Robo\Task\Base\ParallelExec idleTimeout(int $timeout) stops process if it does not output for time longer then `$timeout` (seconds)
  */
 class ParallelExec extends BaseTask implements CommandInterface, PrintedInterface
 {
     use \Robo\Common\CommandReceiver;
 
+    /**
+     * @var Process[]
+     */
     protected $processes = [];
+
+    /**
+     * @var null|int
+     */
     protected $timeout = null;
+
+    /**
+     * @var null|int
+     */
     protected $idleTimeout = null;
+
+    /**
+     * @var bool
+     */
     protected $isPrinted = false;
 
+    /**
+     * {@inheritdoc}
+     */
     public function getPrinted()
     {
         return $this->isPrinted;
     }
 
+    /**
+     * @param bool $isPrinted
+     *
+     * @return $this
+     */
     public function printed($isPrinted = true)
     {
         $this->isPrinted = $isPrinted;
         return $this;
     }
 
+    /**
+     * @param string|\Robo\Contract\CommandInterface $command
+     *
+     * @return $this
+     */
     public function process($command)
     {
         $this->processes[] = new Process($this->receiveCommand($command));
         return $this;
     }
 
+    /**
+     * Stops process if it runs longer then `$timeout` (seconds).
+     *
+     * @param int $timeout
+     *
+     * @return $this
+     */
     public function timeout($timeout)
     {
         $this->timeout = $timeout;
         return $this;
     }
 
+    /**
+     * Stops process if it does not output for time longer then `$timeout` (seconds).
+     *
+     * @param int $idleTimeout
+     *
+     * @return $this
+     */
     public function idleTimeout($idleTimeout)
     {
         $this->idleTimeout = $idleTimeout;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCommand()
     {
         return implode(' && ', $this->processes);
     }
 
+    /**
+     * @return int
+     */
     public function progressIndicatorSteps()
     {
         return count($this->processes);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         foreach ($this->processes as $process) {
-            /** @var $process Process  **/
             $process->setIdleTimeout($this->idleTimeout);
             $process->setTimeout($this->timeout);
             $process->start();

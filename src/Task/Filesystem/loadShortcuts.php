@@ -1,13 +1,12 @@
 <?php
 namespace Robo\Task\Filesystem;
 
-use Robo\Collection\Temporary;
-
 trait loadShortcuts
 {
     /**
-     * @param $src
-     * @param $dst
+     * @param string $src
+     * @param string $dst
+     *
      * @return \Robo\Result
      */
     protected function _copyDir($src, $dst)
@@ -16,8 +15,9 @@ trait loadShortcuts
     }
 
     /**
-     * @param $src
-     * @param $dst
+     * @param string $src
+     * @param string $dst
+     *
      * @return \Robo\Result
      */
     protected function _mirrorDir($src, $dst)
@@ -26,7 +26,8 @@ trait loadShortcuts
     }
 
     /**
-     * @param $dir
+     * @param string|string[] $dir
+     *
      * @return \Robo\Result
      */
     protected function _deleteDir($dir)
@@ -35,7 +36,8 @@ trait loadShortcuts
     }
 
     /**
-     * @param $dir
+     * @param string|string[] $dir
+     *
      * @return \Robo\Result
      */
     protected function _cleanDir($dir)
@@ -44,8 +46,9 @@ trait loadShortcuts
     }
 
     /**
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
+     *
      * @return \Robo\Result
      */
     protected function _rename($from, $to)
@@ -54,7 +57,8 @@ trait loadShortcuts
     }
 
     /**
-     * @param $dir
+     * @param string|string[] $dir
+     *
      * @return \Robo\Result
      */
     protected function _mkdir($dir)
@@ -63,8 +67,11 @@ trait loadShortcuts
     }
 
     /**
-     * @param $dir
-     * @return string|empty
+     * @param string $prefix
+     * @param string $base
+     * @param bool $includeRandomPart
+     *
+     * @return string
      */
     protected function _tmpDir($prefix = 'tmp', $base = '', $includeRandomPart = true)
     {
@@ -73,7 +80,8 @@ trait loadShortcuts
     }
 
     /**
-     * @param $file
+     * @param string $file
+     *
      * @return \Robo\Result
      */
     protected function _touch($file)
@@ -82,7 +90,8 @@ trait loadShortcuts
     }
 
     /**
-     * @param $file
+     * @param string|string[] $file
+     *
      * @return \Robo\Result
      */
     protected function _remove($file)
@@ -91,8 +100,9 @@ trait loadShortcuts
     }
 
     /**
-     * @param $file
-     * @param $group
+     * @param string|string[] $file
+     * @param string $group
+     *
      * @return \Robo\Result
      */
     protected function _chgrp($file, $group)
@@ -101,10 +111,11 @@ trait loadShortcuts
     }
 
     /**
-     * @param $file
-     * @param $permissions
+     * @param string|string[] $file
+     * @param int $permissions
      * @param int $umask
      * @param bool $recursive
+     *
      * @return \Robo\Result
      */
     protected function _chmod($file, $permissions, $umask = 0000, $recursive = false)
@@ -113,8 +124,9 @@ trait loadShortcuts
     }
 
     /**
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
+     *
      * @return \Robo\Result
      */
     protected function _symlink($from, $to)
@@ -123,8 +135,9 @@ trait loadShortcuts
     }
 
     /**
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
+     *
      * @return \Robo\Result
      */
     protected function _copy($from, $to)
@@ -133,8 +146,9 @@ trait loadShortcuts
     }
 
     /**
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
+     *
      * @return \Robo\Result
      */
     protected function _flattenDir($from, $to)

@@ -1,6 +1,7 @@
 <?php
 namespace Robo\Task\Base;
 
+use Robo\Common\ExecTrait;
 use Robo\Contract\CommandInterface;
 use Robo\Contract\PrintedInterface;
 use Robo\Contract\SimulatedInterface;
@@ -31,27 +32,30 @@ class Exec extends BaseTask implements CommandInterface, PrintedInterface, Simul
     use \Robo\Common\CommandReceiver;
     use \Robo\Common\ExecOneCommand;
 
+    /**
+     * @var static[]
+     */
     protected static $instances = [];
 
+    /**
+     * @var string|\Robo\Contract\CommandInterface
+     */
     protected $command;
-    protected $background = false;
-    protected $timeout = null;
-    protected $idleTimeout = null;
-    protected $env = null;
 
     /**
-     * @var Process
+     * @param string|\Robo\Contract\CommandInterface $command
      */
-    protected $process;
-
     public function __construct($command)
     {
         $this->command = $this->receiveCommand($command);
     }
 
-    public function getCommand()
+    /**
+     *
+     */
+    public function __destruct()
     {
-        return trim($this->command . $this->arguments);
+        $this->stop();
     }
 
     /**
@@ -59,109 +63,31 @@ class Exec extends BaseTask implements CommandInterface, PrintedInterface, Simul
      *
      * @return $this
      */
-    public function background()
+    public function background($arg = true)
     {
         self::$instances[] = $this;
-        $this->background = true;
+        $this->background = $arg;
         return $this;
     }
 
     /**
-     * Stop command if it runs longer then $timeout in seconds
-     *
-     * @param $timeout
-     * @return $this
+     * {@inheritdoc}
      */
-    public function timeout($timeout)
+    protected function getCommandDescription()
     {
-        $this->timeout = $timeout;
-        return $this;
+        return $this->getCommand();
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCommand()
+    {
+        return trim($this->command . $this->arguments);
     }
 
     /**
-     * Stops command if it does not output something for a while
-     *
-     * @param $timeout
-     * @return $this
+     * {@inheritdoc}
      */
-    public function idleTimeout($timeout)
-    {
-        $this->idleTimeout = $timeout;
-        return $this;
-    }
-
-    /**
-     * Sets the environment variables for the command
-     *
-     * @param $env
-     * @return $this
-     */
-    public function env(array $env)
-    {
-        $this->env = $env;
-        return $this;
-    }
-
-    public function __destruct()
-    {
-        $this->stop();
-    }
-
-    protected function stop()
-    {
-        if ($this->background && $this->process->isRunning()) {
-            $this->process->stop();
-            $this->printTaskInfo("Stopped {command}", ['command' => $this->getCommand()]);
-        }
-    }
-
-    protected function printAction($context = [])
-    {
-        $command = $this->getCommand();
-        $dir = $this->workingDirectory ? " in {dir}" : "";
-        $this->printTaskInfo("Running {command}$dir", ['command' => $command, 'dir' => $this->workingDirectory] + $context);
-    }
-
-    public function run()
-    {
-        $this->printAction();
-        $this->process = new Process($this->getCommand());
-        $this->process->setTimeout($this->timeout);
-        $this->process->setIdleTimeout($this->idleTimeout);
-        $this->process->setWorkingDirectory($this->workingDirectory);
-
-        if (isset($this->env)) {
-            $this->process->setEnv($this->env);
-        }
-
-        if (!$this->background and !$this->isPrinted) {
-            $this->startTimer();
-            $this->process->run();
-            $this->stopTimer();
-            return new Result($this, $this->process->getExitCode(), $this->process->getOutput(), ['time' => $this->getExecutionTime()]);
-        }
-
-        if (!$this->background and $this->isPrinted) {
-            $this->startTimer();
-            $this->process->run(
-                function ($type, $buffer) {
-                    $progressWasVisible = $this->hideTaskProgress();
-                    print($buffer);
-                    $this->showTaskProgress($progressWasVisible);
-                }
-            );
-            $this->stopTimer();
-            return new Result($this, $this->process->getExitCode(), $this->process->getOutput(), ['time' => $this->getExecutionTime()]);
-        }
-
-        try {
-            $this->process->start();
-        } catch (\Exception $e) {
-            return Result::fromException($this, $e);
-        }
-        return Result::success($this);
-    }
-
     public function simulate($context)
     {
         $this->printAction($context);
@@ -174,6 +100,20 @@ class Exec extends BaseTask implements CommandInterface, PrintedInterface, Simul
                 unset($instance);
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function run()
+    {
+        $result_data = $this->execute(new Process($this->getCommand()));
+        return new Result(
+            $this,
+            $result_data->getExitCode(),
+            $result_data->getMessage(),
+            $result_data->getData()
+        );
     }
 }
 

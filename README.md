@@ -10,6 +10,7 @@
 [![License](https://poser.pugx.org/consolidation/robo/license.png)](https://www.versioneye.com/user/projects/57c4a6fe968d64004d97620a?child=57c4a6fe968d64004d97620a#tab-licenses)
 
 [![Build Status](https://travis-ci.org/consolidation/Robo.svg?branch=master)](https://travis-ci.org/consolidation/Robo) 
+[![Windows CI](https://ci.appveyor.com/api/projects/status/0823hnh06pw8ir4d?svg=true)](https://ci.appveyor.com/project/greg-1-anderson/robo)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/consolidation/Robo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/consolidation/Robo/?branch=master)
 [![Dependency Status](https://www.versioneye.com/user/projects/57c4a6fe968d64004d97620a/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57c4a6fe968d64004d97620a)
 
@@ -85,7 +86,6 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 }
-?>
 ```
 
 If you execute `robo` you will see this task added to list of available task with name: `test:acceptance`.
@@ -109,7 +109,6 @@ class RoboFile extends \Robo\Tasks {
         })->run();
     }
 }
-?>
 ```
 
 ---
@@ -123,7 +122,7 @@ class RoboFile extends \Robo\Tasks
     public function clean()
     {
         $this->taskCleanDir([
-            'app/cache'
+            'app/cache',
             'app/logs'
         ])->run();
 
@@ -131,8 +130,7 @@ class RoboFile extends \Robo\Tasks
             'web/assets/tmp_uploads',
         ])->run();
     }
-
-?>
+}
 ```
 
 This task cleans `app/cache` and `app/logs` dirs (ignoring .gitignore and .gitkeep files)
@@ -170,8 +168,8 @@ Create your own tasks and send them as Pull Requests or create packages prefixed
 
 Follow [@robo_php](http://twitter.com/robo_php) for updates.
 
-Created by Michael Bodnarchuk [@davert](http://twitter.com/davert).
+Brought to you by [Consolidation Team](https://github.com/orgs/consolidation/people) and our [awesome contributors](https://github.com/consolidation/Robo/graphs/contributors).
 
 ## License
 
-MIT
+[MIT](https://github.com/consolidation/Robo/blob/master/LICENSE)

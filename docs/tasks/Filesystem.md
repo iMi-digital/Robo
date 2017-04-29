@@ -30,6 +30,7 @@ $this->_copyDir('dist/config', 'config');
 
 * `dirPermissions($value)`  Sets the default folder permissions for the destination if it doesn't exist
 * `exclude($exclude = null)`  List files to exclude.
+* `overwrite(false)` Overwrite destination files newer than source files - defaults to true.
 
 ## DeleteDir
 
@@ -68,18 +69,18 @@ $this->_mkdir('logs');
 ?>
 ```
 
-* `$this mkdir($dir)` 
-* `$this touch($file)` 
-* `$this copy($from, $to, $force = null)` 
-* `$this chmod($file, $permissions, $umask = null, $recursive = null)` 
-* `$this chgrp($file, $group, $recursive = null)` 
-* `$this chown($file, $user, $recursive = null)` 
-* `$this remove($file)` 
-* `$this rename($from, $to)` 
-* `$this symlink($from, $to)` 
-* `$this mirror($from, $to)` 
+* `$this mkdir(string|array|\Traversable $dir, int $mode = 0777)` 
+* `$this touch(string|array|\Traversable $file, int $time = null, int $atime = null)` 
+* `$this copy(string $from, string $to, bool $force = false)` 
+* `$this chmod(string|array|\Traversable $file, int $permissions, int $umask = 0000, bool $recursive = false)` 
+* `$this chgrp(string|array|\Traversable $file, string $group, bool $recursive = false)` 
+* `$this chown(string|array|\Traversable $file, string $user, bool $recursive = false)` 
+* `$this remove(string|array|\Traversable $file)` 
+* `$this rename(string $from, string $to, bool $force = false)` 
+* `$this symlink(string $from, string $to, bool $copyOnWindows = false)` 
+* `$this mirror(string $from, string $to, \Traversable $iterator = null, array $options = [])` 
 
-* `stopOnFail($stop = null)` 
+* `stopOnFail($stop = null)`   * `param bool` $stop
 
 ## FlattenDir
 

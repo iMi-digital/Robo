@@ -2,7 +2,6 @@
 namespace Robo\Task\Development;
 
 use Robo\Contract\ProgressIndicatorAwareInterface;
-use Robo\Common\ProgressIndicatorAwareTrait;
 use Robo\Contract\PrintedInterface;
 use Robo\Result;
 use Robo\Task\BaseTask;
@@ -44,12 +43,29 @@ class PackPhar extends BaseTask implements PrintedInterface, ProgressIndicatorAw
      * @var \Phar
      */
     protected $phar;
+
+    /**
+     * @var null|string
+     */
     protected $compileDir = null;
+
+    /**
+     * @var string
+     */
     protected $filename;
+
+    /**
+     * @var bool
+     */
     protected $compress = false;
+
     protected $stub;
+
     protected $bin;
 
+    /**
+     * @var string
+     */
     protected $stubTemplate = <<<EOF
 #!/usr/bin/env php
 <?php
@@ -58,13 +74,22 @@ Phar::mapPhar();
 __HALT_COMPILER();
 EOF;
 
+    /**
+     * @var string[]
+     */
     protected $files = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public function getPrinted()
     {
         return true;
     }
 
+    /**
+     * @param string $filename
+     */
     public function __construct($filename)
     {
         $file = new \SplFileInfo($filename);
@@ -76,7 +101,8 @@ EOF;
     }
 
     /**
-     * @param boolean $compress
+     * @param bool $compress
+     *
      * @return $this
      */
     public function compress($compress = true)
@@ -86,7 +112,8 @@ EOF;
     }
 
     /**
-     * @param $stub
+     * @param string $stub
+     *
      * @return $this
      */
     public function stub($stub)
@@ -95,6 +122,9 @@ EOF;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function progressIndicatorSteps()
     {
         // run() will call advanceProgressIndicator() once for each
@@ -102,6 +132,9 @@ EOF;
         return count($this->files)+2;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         $this->printTaskInfo('Creating {filename}', ['filename' => $this->filename]);
@@ -132,19 +165,33 @@ EOF;
         return Result::success($this, '', ['time' => $this->getExecutionTime()]);
     }
 
-
+    /**
+     * @param string $path
+     * @param string $file
+     *
+     * @return $this
+     */
     public function addStripped($path, $file)
     {
         $this->files[$path] = $this->stripWhitespace(file_get_contents($file));
         return $this;
     }
 
+    /**
+     * @param string $path
+     * @param string $file
+     *
+     * @return $this
+     */
     public function addFile($path, $file)
     {
         $this->files[$path] = file_get_contents($file);
         return $this;
     }
 
+    /**
+     * @param \Symfony\Component\Finder\SplFileInfo[] $files
+     */
     public function addFiles($files)
     {
         foreach ($files as $file) {
@@ -152,6 +199,11 @@ EOF;
         }
     }
 
+    /**
+     * @param string $file
+     *
+     * @return $this
+     */
     public function executable($file)
     {
         $source = file_get_contents($file);
@@ -164,7 +216,9 @@ EOF;
 
     /**
      * Strips whitespace from source. Taken from composer
-     * @param $source
+     *
+     * @param string $source
+     *
      * @return string
      */
     private function stripWhitespace($source)

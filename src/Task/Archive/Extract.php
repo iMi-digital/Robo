@@ -31,34 +31,61 @@ use Robo\Common\BuilderAwareTrait;
  *  ->run();
  * ?>
  * ```
- *
- * @method to(string) location to store extracted files
  */
 class Extract extends BaseTask implements BuilderAwareInterface
 {
     use BuilderAwareTrait;
 
+    /**
+     * @var string
+     */
     protected $filename;
+
+    /**
+     * @var string
+     */
     protected $to;
+
+    /**
+     * @var bool
+     */
     private $preserveTopDirectory = false;
 
+    /**
+     * @param string $filename
+     */
     public function __construct($filename)
     {
         $this->filename = $filename;
     }
 
+    /**
+     * Location to store extracted files.
+     *
+     * @param string $to
+     *
+     * @return $this
+     */
     public function to($to)
     {
         $this->to = $to;
         return $this;
     }
 
+    /**
+     * @param bool $preserve
+     *
+     * @return $this
+     */
     public function preserveTopDirectory($preserve = true)
     {
         $this->preserveTopDirectory = $preserve;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         if (!file_exists($this->filename)) {
@@ -118,6 +145,12 @@ class Extract extends BaseTask implements BuilderAwareInterface
         return $result;
     }
 
+    /**
+     * @param string $mimetype
+     * @param string $extractLocation
+     *
+     * @return \Robo\Result
+     */
     protected function extractAppropriateType($mimetype, $extractLocation)
     {
         // Perform the extraction of a zip file.
@@ -127,6 +160,11 @@ class Extract extends BaseTask implements BuilderAwareInterface
         return $this->extractTar($extractLocation);
     }
 
+    /**
+     * @param string $extractLocation
+     *
+     * @return \Robo\Result
+     */
     protected function extractZip($extractLocation)
     {
         if (!extension_loaded('zlib')) {
@@ -145,6 +183,11 @@ class Extract extends BaseTask implements BuilderAwareInterface
         return Result::success($this);
     }
 
+    /**
+     * @param string $extractLocation
+     *
+     * @return \Robo\Result
+     */
     protected function extractTar($extractLocation)
     {
         if (!class_exists('Archive_Tar')) {
@@ -158,6 +201,11 @@ class Extract extends BaseTask implements BuilderAwareInterface
         return Result::success($this);
     }
 
+    /**
+     * @param string $filename
+     *
+     * @return bool|string
+     */
     protected static function archiveType($filename)
     {
         $content_type = false;
@@ -221,6 +269,9 @@ class Extract extends BaseTask implements BuilderAwareInterface
         return $content_type;
     }
 
+    /**
+     * @return string
+     */
     protected static function getTmpDir()
     {
         return getcwd().'/tmp'.rand().time();

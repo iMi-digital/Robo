@@ -4,9 +4,7 @@ namespace Robo\Common;
 use Robo\Robo;
 use Robo\TaskInfo;
 use Consolidation\Log\ConsoleLogLevel;
-use Robo\Common\ConfigAwareTrait;
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Robo\Contract\ProgressIndicatorAwareInterface;
 
@@ -21,7 +19,11 @@ trait TaskIO
 {
     use LoggerAwareTrait;
     use ConfigAwareTrait;
+    use VerbosityThresholdTrait;
 
+    /**
+     * @return mixed|null|\Psr\Log\LoggerInterface
+     */
     public function logger()
     {
         // $this->logger should always be set in Robo core tasks.
@@ -54,6 +56,9 @@ trait TaskIO
      *
      * n.b. We should probably have printTaskNotice for our ordinary
      * output, and use printTaskInfo for less interesting messages.
+     *
+     * @param string $text
+     * @param null|array $context
      */
     protected function printTaskInfo($text, $context = null)
     {
@@ -69,6 +74,9 @@ trait TaskIO
      * With the Symfony Console logger, success messages are remapped to NOTICE,
      * and displayed in VERBOSITY_VERBOSE. When used with the Robo logger,
      * success messages are displayed at VERBOSITY_NORMAL.
+     *
+     * @param string $text
+     * @param null|array $context
      */
     protected function printTaskSuccess($text, $context = null)
     {
@@ -85,6 +93,9 @@ trait TaskIO
      * execution can continue.
      *
      * Warning messages are displayed at VERBOSITY_NORMAL.
+     *
+     * @param string $text
+     * @param null|array $context
      */
     protected function printTaskWarning($text, $context = null)
     {
@@ -96,6 +107,9 @@ trait TaskIO
      * and the task cannot continue.
      *
      * Error messages are displayed at VERBOSITY_NORMAL.
+     *
+     * @param string $text
+     * @param null|array $context
      */
     protected function printTaskError($text, $context = null)
     {
@@ -105,14 +119,26 @@ trait TaskIO
     /**
      * Provide debugging notification.  These messages are only
      * displayed if the log level is VERBOSITY_DEBUG.
+     *
+     * @param string$text
+     * @param null|array $context
      */
     protected function printTaskDebug($text, $context = null)
     {
         $this->printTaskOutput(LogLevel::DEBUG, $text, $this->getTaskContext($context));
     }
 
+    /**
+     * @param string $level
+     *   One of the \Psr\Log\LogLevel constant
+     * @param string $text
+     * @param null|array $context
+     */
     protected function printTaskOutput($level, $text, $context)
     {
+        if (!$this->verbosityMeetsThreshold()) {
+            return;
+        }
         $logger = $this->logger();
         if (!$logger) {
             return;
@@ -124,6 +150,9 @@ trait TaskIO
         $this->showTaskProgress($inProgress);
     }
 
+    /**
+     * @return bool
+     */
     protected function hideTaskProgress()
     {
         $inProgress = false;
@@ -139,6 +168,9 @@ trait TaskIO
         return $inProgress;
     }
 
+    /**
+     * @param $inProgress
+     */
     protected function showTaskProgress($inProgress)
     {
         if ($inProgress) {
@@ -148,6 +180,11 @@ trait TaskIO
 
     /**
      * Format a quantity of bytes.
+     *
+     * @param int $size
+     * @param int $precision
+     *
+     * @return string
      */
     protected function formatBytes($size, $precision = 2)
     {
@@ -166,6 +203,8 @@ trait TaskIO
      * which is inserted at the head of log messages by
      * Robo\Common\CustomLogStyle::formatMessage().
      *
+     * @param null|object $task
+     *
      * @return string
      */
     protected function getPrintedTaskName($task = null)
@@ -177,6 +216,8 @@ trait TaskIO
     }
 
     /**
+     * @param null|array $context
+     *
      * @return array with context information
      */
     protected function getTaskContext($context = null)

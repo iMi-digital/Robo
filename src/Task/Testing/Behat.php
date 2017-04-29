@@ -22,18 +22,28 @@ class Behat extends BaseTask implements CommandInterface, PrintedInterface
 {
     use \Robo\Common\ExecOneCommand;
 
+    /**
+     * @var string
+     */
     protected $command;
 
     /**
-     * @var array $formaters available formaters for format option
+     * @var string[] $formaters available formaters for format option
      */
     protected $formaters = ['progress', 'pretty', 'junit'];
 
     /**
-     * @var array $verbose_levels available verbose levels
+     * @var string[] $verbose_levels available verbose levels
      */
     protected $verbose_levels = ['v', 'vv'];
 
+    /**
+     * Behat constructor.
+     *
+     * @param null|string $pathToBehat
+     *
+     * @throws \Robo\Exception\TaskException
+     */
     public function __construct($pathToBehat = null)
     {
         $this->command = $pathToBehat;
@@ -43,45 +53,71 @@ class Behat extends BaseTask implements CommandInterface, PrintedInterface
         if (!$this->command) {
             throw new \Robo\Exception\TaskException(__CLASS__, "Neither composer nor phar installation of Behat found");
         }
-        $this->arg('run');
     }
 
+    /**
+     * @return $this
+     */
     public function stopOnFail()
     {
         $this->option('stop-on-failure');
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function noInteraction()
     {
         $this->option('no-interaction');
         return $this;
     }
 
+    /**
+     * @param $config_file
+     *
+     * @return $this
+     */
     public function config($config_file)
     {
         $this->option('config', $config_file);
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function colors()
     {
         $this->option('colors');
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function noColors()
     {
         $this->option('no-colors');
         return $this;
     }
 
+    /**
+     * @param string $suite
+     *
+     * @return $this
+     */
     public function suite($suite)
     {
         $this->option('suite', $suite);
         return $this;
     }
 
+    /**
+     * @param string $level
+     *
+     * @return $this
+     */
     public function verbose($level = 'v')
     {
         if (!in_array($level, $this->verbose_levels)) {
@@ -91,6 +127,11 @@ class Behat extends BaseTask implements CommandInterface, PrintedInterface
         return $this;
     }
 
+    /**
+     * @param string $formater
+     *
+     * @return $this
+     */
     public function format($formater)
     {
         if (!in_array($formater, $this->formaters)) {
@@ -112,7 +153,7 @@ class Behat extends BaseTask implements CommandInterface, PrintedInterface
     }
 
     /**
-     * @return \Robo\Result
+     * {@inheritdoc}
      */
     public function run()
     {

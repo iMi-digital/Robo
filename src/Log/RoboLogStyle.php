@@ -3,8 +3,6 @@ namespace Robo\Log;
 
 use Robo\Common\TimeKeeper;
 use Consolidation\Log\LogOutputStyler;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\OutputStyle;
 
 /**
  * Robo Log Styler.
@@ -13,6 +11,12 @@ class RoboLogStyle extends LogOutputStyler
 {
     const TASK_STYLE_SIMULATED = 'options=reverse;bold';
 
+    /**
+     * RoboLogStyle constructor.
+     *
+     * @param array $labelStyles
+     * @param array $messageStyles
+     */
     public function __construct($labelStyles = [], $messageStyles = [])
     {
         parent::__construct($labelStyles, $messageStyles);
@@ -28,6 +32,12 @@ class RoboLogStyle extends LogOutputStyler
     /**
      * Log style customization for Robo: replace the log level with
      * the task name.
+     *
+     * @param string $level
+     * @param string $message
+     * @param array $context
+     *
+     * @return string
      */
     protected function formatMessageByLevel($level, $message, $context)
     {
@@ -41,6 +51,14 @@ class RoboLogStyle extends LogOutputStyler
     /**
      * Log style customization for Robo: add the time indicator to the
      * end of the log message if it exists in the context.
+     *
+     * @param string $label
+     * @param string $message
+     * @param array $context
+     * @param string $taskNameStyle
+     * @param string $messageStyle
+     *
+     * @return string
      */
     protected function formatMessage($label, $message, $context, $taskNameStyle, $messageStyle = '')
     {

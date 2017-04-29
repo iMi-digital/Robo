@@ -2,13 +2,12 @@
 namespace Robo\Log;
 
 use Robo\Result;
-use Robo\TaskInfo;
 use Robo\Contract\PrintedInterface;
 use Robo\Contract\ProgressIndicatorAwareInterface;
+use Robo\Contract\VerbosityThresholdInterface;
 use Robo\Common\ProgressIndicatorAwareTrait;
 
 use Psr\Log\LogLevel;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Consolidation\Log\ConsoleLogLevel;
@@ -26,10 +25,16 @@ class ResultPrinter implements LoggerAwareInterface, ProgressIndicatorAwareInter
      *
      * Returns 'true' if the message is printed, or false if it isn't.
      *
-     * @return boolean
+     * @param \Robo\Result $result
+     *
+     * @return bool
      */
     public function printResult(Result $result)
     {
+        $task = $result->getTask();
+        if ($task instanceof VerbosityThresholdInterface && !$task->verbosityMeetsThreshold()) {
+            return;
+        }
         if (!$result->wasSuccessful()) {
             return $this->printError($result);
         } else {
@@ -40,6 +45,8 @@ class ResultPrinter implements LoggerAwareInterface, ProgressIndicatorAwareInter
     /**
      * Log that we are about to abort due to an error being encountered
      * in 'stop on fail' mode.
+     *
+     * @param \Robo\Result $result
      */
     public function printStopOnFail($result)
     {
@@ -49,6 +56,10 @@ class ResultPrinter implements LoggerAwareInterface, ProgressIndicatorAwareInter
 
     /**
      * Log the result of a Robo task that returned an error.
+     *
+     * @param \Robo\Result $result
+     *
+     * @return bool
      */
     protected function printError(Result $result)
     {
@@ -69,6 +80,10 @@ class ResultPrinter implements LoggerAwareInterface, ProgressIndicatorAwareInter
 
     /**
      * Log the result of a Robo task that was successful.
+     *
+     * @param \Robo\Result $result
+     *
+     * @return bool
      */
     protected function printSuccess(Result $result)
     {
@@ -81,6 +96,11 @@ class ResultPrinter implements LoggerAwareInterface, ProgressIndicatorAwareInter
         return false;
     }
 
+    /**
+     * @param string $level
+     * @param string $message
+     * @param array $context
+     */
     protected function printMessage($level, $message, $context = [])
     {
         $inProgress = $this->hideProgressIndicator();

@@ -20,14 +20,26 @@ class CopyDir extends BaseDir
 {
     use ResourceExistenceChecker;
 
-    /** @var int $chmod */
+    /**
+     * @var int
+     */
     protected $chmod = 0755;
 
     /**
-     * @var array files to exclude on copying
+     * Files to exclude on copying.
+     *
+     * @var string[]
      */
     protected $exclude = [];
 
+    /**
+     * Overwrite destination files newer than source files.
+     */
+    protected $overwrite = true;
+
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         if (!$this->checkResources($this->dirs, 'dir')) {
@@ -46,7 +58,9 @@ class CopyDir extends BaseDir
      * @link http://en.wikipedia.org/wiki/Chmod
      * @link http://php.net/manual/en/function.mkdir.php
      * @link http://php.net/manual/en/function.chmod.php
+     *
      * @param int $value
+     *
      * @return $this
      */
     public function dirPermissions($value)
@@ -58,7 +72,8 @@ class CopyDir extends BaseDir
     /**
      * List files to exclude.
      *
-     * @param array $exclude
+     * @param string[] $exclude
+     *
      * @return $this
      */
     public function exclude($exclude = [])
@@ -68,12 +83,25 @@ class CopyDir extends BaseDir
     }
 
     /**
+     * Destination files newer than source files are overwritten.
+     *
+     * @param bool $overwrite
+     *
+     * @return $this
+     */
+    public function overwrite($overwrite)
+    {
+        $this->overwrite = $overwrite;
+        return $this;
+    }
+
+    /**
      * Copies a directory to another location.
      *
      * @param string $src Source directory
      * @param string $dst Destination directory
+     *
      * @throws \Robo\Exception\TaskException
-     * @return void
      */
     protected function copyDir($src, $dst)
     {
@@ -94,7 +122,7 @@ class CopyDir extends BaseDir
                 if (is_dir($srcFile)) {
                     $this->copyDir($srcFile, $destFile);
                 } else {
-                    copy($srcFile, $destFile);
+                    $this->fs->copy($srcFile, $destFile, $this->overwrite);
                 }
             }
         }

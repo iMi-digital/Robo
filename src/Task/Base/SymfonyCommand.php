@@ -6,7 +6,6 @@ use Robo\Result;
 use Robo\Task\BaseTask;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Executes Symfony Command
@@ -29,12 +28,12 @@ use Symfony\Component\Console\Input\InputInterface;
 class SymfonyCommand extends BaseTask
 {
     /**
-     * @var SymfonyCommand
+     * @var \Symfony\Component\Console\Command\Command
      */
     protected $command;
 
     /**
-     * @var InputInterface
+     * @var string[]
      */
     protected $input;
 
@@ -44,6 +43,12 @@ class SymfonyCommand extends BaseTask
         $this->input = [];
     }
 
+    /**
+     * @param string $arg
+     * @param string $value
+     *
+     * @return $this
+     */
     public function arg($arg, $value)
     {
         $this->input[$arg] = $value;
@@ -56,6 +61,9 @@ class SymfonyCommand extends BaseTask
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         $this->printTaskInfo('Running command {command}', ['command' => $this->command->getName()]);

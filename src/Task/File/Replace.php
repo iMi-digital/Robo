@@ -30,47 +30,90 @@ use Robo\Task\BaseTask;
  *  ->run();
  * ?>
  * ```
- *
- * @method regex(string) regex to match string to be replaced
- * @method from(string|array) string(s) to be replaced
- * @method to(string|array) value(s) to be set as a replacement
  */
 class Replace extends BaseTask
 {
+    /**
+     * @var string
+     */
     protected $filename;
+
+    /**
+     * @var string|string[]
+     */
     protected $from;
+
+    /**
+     * @var string|string[]
+     */
     protected $to;
+
+    /**
+     * @var string
+     */
     protected $regex;
 
+    /**
+     * @param string $filename
+     */
     public function __construct($filename)
     {
         $this->filename = $filename;
     }
 
+    /**
+     * @param string $filename
+     *
+     * @return $this
+     */
     public function filename($filename)
     {
         $this->filename = $filename;
         return $this;
     }
 
+    /**
+     * String(s) to be replaced.
+     *
+     * @param string|string[] $from
+     *
+     * @return $this
+     */
     public function from($from)
     {
         $this->from = $from;
         return $this;
     }
 
+    /**
+     * Value(s) to be set as a replacement.
+     *
+     * @param string|string[] $to
+     *
+     * @return $this
+     */
     public function to($to)
     {
         $this->to = $to;
         return $this;
     }
 
+    /**
+     * Regex to match string to be replaced.
+     *
+     * @param string $regex
+     *
+     * @return $this
+     */
     public function regex($regex)
     {
         $this->regex = $regex;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         if (!file_exists($this->filename)) {

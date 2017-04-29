@@ -12,7 +12,8 @@ use Traversable;
  * ``` php
  * <?php
  * // ApiGen Command
- * $this->taskApiGen('./apigen.neon')
+ * $this->taskApiGen('./vendor/apigen/apigen.phar')
+ *      ->config('./apigen.neon')
  *      ->templateConfig('vendor/apigen/apigen/templates/bootstrap/config.neon')
  *      ->wipeout(true)
  *       ->run();
@@ -26,11 +27,29 @@ class ApiGen extends BaseTask implements CommandInterface
     const BOOL_NO = 'no';
     const BOOL_YES = 'yes';
 
+    /**
+     * @var string
+     */
     protected $command;
+    protected $operation = 'generate';
 
+    /**
+     * @param null|string $pathToApiGen
+     *
+     * @throws \Robo\Exception\TaskException
+     */
     public function __construct($pathToApiGen = null)
     {
         $this->command = $pathToApiGen;
+        $command_parts = [];
+        preg_match('/((?:.+)?apigen(?:\.phar)?) ?( \w+)? ?(.+)?/', $this->command, $command_parts);
+        if (count($command_parts) === 3) {
+            list(, $this->command, $this->operation) = $command_parts;
+        }
+        if (count($command_parts) === 4) {
+            list(, $this->command, $this->operation, $arg) = $command_parts;
+            $this->arg($arg);
+        }
         if (!$this->command) {
             $this->command = $this->findExecutablePhar('apigen');
         }
@@ -40,7 +59,33 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
+     * Pass methods parameters as arguments to executable. Argument values
+     * are automatically escaped.
+     *
+     * @param string|string[] $args
+     *
+     * @return $this
+     */
+    public function args($args)
+    {
+        if (!is_array($args)) {
+            $args = func_get_args();
+        }
+        $args = array_map(function ($arg) {
+            if (preg_match('/^\w+$/', trim($arg)) === 1) {
+                $this->operation = $arg;
+                return null;
+            }
+            return $arg;
+        }, $args);
+        $args = array_filter($args);
+        $this->arguments .= ' ' . implode(' ', array_map('static::escape', $args));
+        return $this;
+    }
+
+    /**
      * @param array|Traversable|string $arg a single object or something traversable
+     *
      * @return array|Traversable the provided argument if it was already traversable, or the given
      *                           argument returned as a one-element array
      */
@@ -55,6 +100,7 @@ class ApiGen extends BaseTask implements CommandInterface
 
     /**
      * @param array|string $arg a single argument or an array of multiple string values
+     *
      * @return string a comma-separated string of all of the provided arguments, suitable
      *                as a command-line "list" type argument for ApiGen
      */
@@ -65,10 +111,11 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $val an argument to be normalized
+     * @param bool|string $val an argument to be normalized
      * @param string $default one of self::BOOL_YES or self::BOOK_NO if the provided
      *               value could not deterministically be converted to a
      *               yes or no value
+     *
      * @return string the given value as a command-line "yes|no" type of argument for ApiGen,
      *                or the default value if none could be determined
      */
@@ -96,6 +143,11 @@ class ApiGen extends BaseTask implements CommandInterface
         return $default;
     }
 
+    /**
+     * @param string $config
+     *
+     * @return $this
+     */
     public function config($config)
     {
         $this->option('config', $config);
@@ -115,6 +167,11 @@ class ApiGen extends BaseTask implements CommandInterface
         return $this;
     }
 
+    /**
+     * @param string $dest
+     *
+     * @return $this
+     */
     public function destination($dest)
     {
         $this->option('destination', $dest);
@@ -182,36 +239,66 @@ class ApiGen extends BaseTask implements CommandInterface
         return $this;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
     public function mainProjectNamePrefix($name)
     {
         $this->option('main', $name);
         return $this;
     }
 
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
     public function title($title)
     {
         $this->option('title', $title);
         return $this;
     }
 
+    /**
+     * @param string $baseUrl
+     *
+     * @return $this
+     */
     public function baseUrl($baseUrl)
     {
         $this->option('base-url', $baseUrl);
         return $this;
     }
 
+    /**
+     * @param string $id
+     *
+     * @return $this
+     */
     public function googleCseId($id)
     {
         $this->option('google-cse-id', $id);
         return $this;
     }
 
+    /**
+     * @param string $trackingCode
+     *
+     * @return $this
+     */
     public function googleAnalytics($trackingCode)
     {
         $this->option('google-analytics', $trackingCode);
         return $this;
     }
 
+    /**
+     * @param mixed $templateConfig
+     *
+     * @return $this
+     */
     public function templateConfig($templateConfig)
     {
         $this->option('template-config', $templateConfig);
@@ -229,6 +316,11 @@ class ApiGen extends BaseTask implements CommandInterface
         return $this;
     }
 
+    /**
+     * @param string $groups
+     *
+     * @return $this
+     */
     public function groups($groups)
     {
         $this->option('groups', $groups);
@@ -281,7 +373,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $tree 'yes' or true to generate a tree view of classes, 'no' or false otherwise
+     * @param bool|string $tree 'yes' or true to generate a tree view of classes, 'no' or false otherwise
      *
      * @return $this
      */
@@ -292,7 +384,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $dep 'yes' or true to generate documentation for deprecated classes, 'no' or false otherwise
+     * @param bool|string $dep 'yes' or true to generate documentation for deprecated classes, 'no' or false otherwise
      *
      * @return $this
      */
@@ -303,7 +395,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $todo 'yes' or true to document tasks, 'no' or false otherwise
+     * @param bool|string $todo 'yes' or true to document tasks, 'no' or false otherwise
      *
      * @return $this
      */
@@ -314,7 +406,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $src 'yes' or true to generate highlighted source code, 'no' or false otherwise
+     * @param bool|string $src 'yes' or true to generate highlighted source code, 'no' or false otherwise
      *
      * @return $this
      */
@@ -325,7 +417,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $zipped 'yes' or true to generate downloadable documentation, 'no' or false otherwise
+     * @param bool|string $zipped 'yes' or true to generate downloadable documentation, 'no' or false otherwise
      *
      * @return $this
      */
@@ -342,7 +434,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $wipeout 'yes' or true to clear out the destination directory, 'no' or false otherwise
+     * @param bool|string $wipeout 'yes' or true to clear out the destination directory, 'no' or false otherwise
      *
      * @return $this
      */
@@ -353,7 +445,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $quiet 'yes' or true for quiet, 'no' or false otherwise
+     * @param bool|string $quiet 'yes' or true for quiet, 'no' or false otherwise
      *
      * @return $this
      */
@@ -364,7 +456,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $bar 'yes' or true to display a progress bar, 'no' or false otherwise
+     * @param bool|string $bar 'yes' or true to display a progress bar, 'no' or false otherwise
      *
      * @return $this
      */
@@ -375,7 +467,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $colors 'yes' or true colorize the output, 'no' or false otherwise
+     * @param bool|string $colors 'yes' or true colorize the output, 'no' or false otherwise
      *
      * @return $this
      */
@@ -386,7 +478,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $check 'yes' or true to check for updates, 'no' or false otherwise
+     * @param bool|string $check 'yes' or true to check for updates, 'no' or false otherwise
      *
      * @return $this
      */
@@ -397,7 +489,7 @@ class ApiGen extends BaseTask implements CommandInterface
     }
 
     /**
-     * @param boolean|string $debug 'yes' or true to enable debug mode, 'no' or false otherwise
+     * @param bool|string $debug 'yes' or true to enable debug mode, 'no' or false otherwise
      *
      * @return $this
      */
@@ -407,11 +499,17 @@ class ApiGen extends BaseTask implements CommandInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCommand()
     {
-        return $this->command . $this->arguments;
+        return "$this->command $this->operation$this->arguments";
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         $this->printTaskInfo('Running ApiGen {args}', ['args' => $this->arguments]);

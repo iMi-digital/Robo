@@ -28,15 +28,14 @@ $this->taskComposerDumpAutoload('path/to/my/composer.phar')
 ?>
 ```
 
-* `optimize()` 
+* `optimize()`   * `return` $this
 * `preferDist()`  adds `prefer-dist` option to composer
 * `preferSource()`  adds `prefer-source` option to composer
 * `noDev()`  adds `no-dev` option to composer
 * `noAnsi()`  adds `no-ansi` option to composer
 * `ansi()`  adds `ansi` option to composer
 * `optimizeAutoloader()`  adds `optimize-autoloader` option to composer
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
@@ -71,8 +70,7 @@ $this->taskComposerInstall('path/to/my/composer.phar')
 * `noAnsi()`  adds `no-ansi` option to composer
 * `ansi()`  adds `ansi` option to composer
 * `optimizeAutoloader()`  adds `optimize-autoloader` option to composer
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
@@ -91,19 +89,18 @@ $this->taskComposerValidate()->run();
 ?>
 ```
 
-* `dev()` 
-* `noProgress()` 
-* `noUpdate()` 
-* `updateNoDev()` 
-* `noUpdateWithDependencies()` 
+* `dev()`   * `return` $this
+* `noProgress()`   * `return` $this
+* `noUpdate()`   * `return` $this
+* `updateNoDev()`   * `return` $this
+* `noUpdateWithDependencies()`   * `return` $this
 * `preferDist()`  adds `prefer-dist` option to composer
 * `preferSource()`  adds `prefer-source` option to composer
 * `noDev()`  adds `no-dev` option to composer
 * `noAnsi()`  adds `no-ansi` option to composer
 * `ansi()`  adds `ansi` option to composer
 * `optimizeAutoloader()`  adds `optimize-autoloader` option to composer
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
@@ -138,8 +135,7 @@ $this->taskComposerUpdate('path/to/my/composer.phar')
 * `noAnsi()`  adds `no-ansi` option to composer
 * `ansi()`  adds `ansi` option to composer
 * `optimizeAutoloader()`  adds `optimize-autoloader` option to composer
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
@@ -158,19 +154,18 @@ $this->taskComposerValidate()->run();
 ?>
 ```
 
-* `noCheckAll()` 
-* `noCheckLock()` 
-* `noCheckPublish()` 
-* `withDependencies()` 
-* `strict()` 
+* `noCheckAll()`   * `return` $this
+* `noCheckLock()`   * `return` $this
+* `noCheckPublish()`   * `return` $this
+* `withDependencies()`   * `return` $this
+* `strict()`   * `return` $this
 * `preferDist()`  adds `prefer-dist` option to composer
 * `preferSource()`  adds `prefer-source` option to composer
 * `noDev()`  adds `no-dev` option to composer
 * `noAnsi()`  adds `no-ansi` option to composer
 * `ansi()`  adds `ansi` option to composer
 * `optimizeAutoloader()`  adds `optimize-autoloader` option to composer
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.

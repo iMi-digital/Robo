@@ -1,11 +1,11 @@
 <?php
 use Robo\Result;
-use Robo\ResultData;
-use Robo\Collection\CollectionBuilder;
 
+use Consolidation\AnnotatedCommand\CommandData;
+use Consolidation\OutputFormatters\Options\FormatterOptions;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
-use Consolidation\OutputFormatters\StructuredData\AssociativeList;
-use Consolidation\AnnotatedCommand\AnnotationData;
+use Consolidation\OutputFormatters\StructuredData\PropertyList;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Example RoboFile.
@@ -22,7 +22,7 @@ use Consolidation\AnnotatedCommand\AnnotationData;
  */
 class RoboFile extends \Robo\Tasks
 {
-   /**
+    /**
      * Watch a file.
      *
      * Demonstrates the 'watch' command. Runs 'composer update' any time
@@ -40,6 +40,7 @@ class RoboFile extends \Robo\Tasks
      */
     public function tryInput()
     {
+        $this->say('The <b>expression</b> <bogus>is</bogus> <info>a < b</> it even works');
         $answer = $this->ask('how are you?');
         $this->say('You are '.$answer);
         $yes = $this->confirm('Do you want one more question?');
@@ -61,7 +62,7 @@ class RoboFile extends \Robo\Tasks
      */
     public function tryPara($options = ['printed' => false, 'error' => false])
     {
-        $dir = __DIR__;
+        $dir = dirname(__DIR__);
         $para = $this->taskParallelExec()
             ->printed($options['printed'])
             ->process("php $dir/tests/_data/parascript.php hey 4")
@@ -72,6 +73,14 @@ class RoboFile extends \Robo\Tasks
             $para->process("ls $dir/tests/_data/filenotfound");
         }
         return $para->run();
+    }
+
+    /**
+     * try:opt-required
+     */
+    public function tryOptRequired($options = ['foo' => InputOption::VALUE_REQUIRED])
+    {
+        print "foo is " . $options['foo'];
     }
 
     /**
@@ -153,7 +162,7 @@ class RoboFile extends \Robo\Tasks
      *   legs: Legs
      *   food: Favorite Food
      *   id: Id
-     * @return AssociativeList
+     * @return PropertyList
      */
     public function tryInfo()
     {
@@ -165,7 +174,23 @@ class RoboFile extends \Robo\Tasks
             'id' => 389245032,
         ];
 
-        return new AssociativeList($outputData);
+        $data = new PropertyList($outputData);
+
+        // Add a render function to transform cell data when the output
+        // format is a table, or similar.  This allows us to add color
+        // information to the output without modifying the data cells when
+        // using yaml or json output formats.
+        $data->addRendererFunction(
+            // n.b. There is a fourth parameter $rowData that may be added here.
+            function ($key, $cellData, FormatterOptions $options) {
+                if ($key == 'name') {
+                    return "<info>$cellData</>";
+                }
+                return $cellData;
+            }
+        );
+
+        return $data;
     }
 
     /**
@@ -196,15 +221,35 @@ class RoboFile extends \Robo\Tasks
     }
 
     /**
+     * Try word wrapping
+     *
+     * @field-labels
+     *   first: First
+     *   second: Second
+     *
+     * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
+     */
+    public function tryWrap()
+    {
+        $data = [
+            [
+                'first' => 'This is a really long cell that contains a lot of data. When it is rendered, it should be wrapped across multiple lines.',
+                'second' => 'This is the second column of the same table. It is also very long, and should be wrapped across multiple lines, just like the first column.',
+            ]
+        ];
+        return new RowsOfFields($data);
+    }
+
+    /**
      * Demonstrate an alter hook with an option
      *
      * @hook alter try:formatters
      * @option $french Add a row with French numbers.
      * @usage try:formatters --french
      */
-    public function alterFormatters($result, array $args, AnnotationData $annotationData)
+    public function alterFormatters($result, CommandData $commandData)
     {
-        if ($args['options']['french']) {
+        if ($commandData->input()->getOption('french')) {
             $result['fr'] = [ 'first' => 'Un',  'second' => 'Deux',  'third' => 'Trois'  ];
         }
 

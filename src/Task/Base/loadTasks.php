@@ -4,7 +4,8 @@ namespace Robo\Task\Base;
 trait loadTasks
 {
     /**
-     * @param $command
+     * @param string|\Robo\Contract\CommandInterface $command
+     *
      * @return Exec
      */
     protected function taskExec($command)
@@ -12,6 +13,9 @@ trait loadTasks
         return $this->task(Exec::class, $command);
     }
 
+    /**
+     * @return ExecStack
+     */
     protected function taskExecStack()
     {
         return $this->task(ExecStack::class);

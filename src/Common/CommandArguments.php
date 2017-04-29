@@ -8,12 +8,16 @@ use Symfony\Component\Process\ProcessUtils;
  */
 trait CommandArguments
 {
+    /**
+     * @var string
+     */
     protected $arguments = '';
 
     /**
      * Pass argument to executable. Its value will be automatically escaped.
      *
-     * @param $arg
+     * @param string $arg
+     *
      * @return $this
      */
     public function arg($arg)
@@ -26,6 +30,7 @@ trait CommandArguments
      * are automatically escaped.
      *
      * @param string|string[] $args
+     *
      * @return $this
      */
     public function args($args)
@@ -33,8 +38,7 @@ trait CommandArguments
         if (!is_array($args)) {
             $args = func_get_args();
         }
-        array_map('static::escape', $args);
-        $this->arguments .= " ".implode(' ', $args);
+        $this->arguments .= ' ' . implode(' ', array_map('static::escape', $args));
         return $this;
     }
 
@@ -42,11 +46,14 @@ trait CommandArguments
      * Pass the provided string in its raw (as provided) form as an argument to executable.
      *
      * @param string $arg
-     * @return type
+     *
+     * @return $this
      */
     public function rawArg($arg)
     {
         $this->arguments .= " $arg";
+        
+        return $this;
     }
 
     /**
@@ -54,11 +61,12 @@ trait CommandArguments
      * plus a few other basic characters.
      *
      * @param string $value
+     *
      * @return string
      */
     public static function escape($value)
     {
-        if (preg_match('/^[a-zA-Z0-9\/.@~_-]*$/', $value)) {
+        if (preg_match('/^[a-zA-Z0-9\/\.@~_-]+$/', $value)) {
             return $value;
         }
         return ProcessUtils::escapeArgument($value);
@@ -68,17 +76,19 @@ trait CommandArguments
      * Pass option to executable. Options are prefixed with `--` , value can be provided in second parameter.
      * Option values are automatically escaped.
      *
-     * @param $option
+     * @param string $option
      * @param string $value
+     * @param string $separator
+     *
      * @return $this
      */
-    public function option($option, $value = null)
+    public function option($option, $value = null, $separator = ' ')
     {
         if ($option !== null and strpos($option, '-') !== 0) {
             $option = "--$option";
         }
         $this->arguments .= null == $option ? '' : " " . $option;
-        $this->arguments .= null == $value ? '' : " " . static::escape($value);
+        $this->arguments .= null == $value ? '' : $separator . static::escape($value);
         return $this;
     }
 
@@ -86,18 +96,20 @@ trait CommandArguments
      * Pass multiple options to executable. Value can be a string or array.
      * Option values are automatically escaped.
      *
-     * @param $option
+     * @param string $option
      * @param string|array $value
+     * @param string $separator
+     *
      * @return $this
      */
-    public function optionList($option, $value = array())
+    public function optionList($option, $value = array(), $separator = ' ')
     {
         if (is_array($value)) {
             foreach ($value as $item) {
-                $this->optionList($option, $item);
+                $this->optionList($option, $item, $separator);
             }
         } else {
-            $this->option($option, $value);
+            $this->option($option, $value, $separator);
         }
 
         return $this;

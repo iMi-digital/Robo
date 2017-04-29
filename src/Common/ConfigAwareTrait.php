@@ -3,20 +3,23 @@
 namespace Robo\Common;
 
 use Robo\Robo;
-use Robo\Config;
+use Robo\Config\Config;
 
 trait ConfigAwareTrait
 {
     /**
-     * @var \Robo\Config
+     * @var \Robo\Config\Config
      */
     protected $config;
 
     /**
      * Set the config management object.
      *
-     * @param  \Robo\Config $config
+     * @param \Robo\Config\Config $config
+     *
      * @return $this
+     *
+     * @see \Robo\Contract\ConfigAwareInterface::setConfig()
      */
     public function setConfig(Config $config)
     {
@@ -28,26 +31,58 @@ trait ConfigAwareTrait
     /**
      * Get the config management object.
      *
-     * @return \Robo\Config
+     * @return \Robo\Config\Config
+     *
+     * @see \Robo\Contract\ConfigAwareInterface::getConfig()
      */
     public function getConfig()
     {
         return $this->config;
     }
 
-    private static function getClassKey($key)
+    /**
+     * Any class that uses ConfigAwareTrait SHOULD override this method
+     * , and define a prefix for its configuration items. This is usually
+     * done in a base class; see BaseTask::configPrefix(). It is not
+     * necessary to override this method for classes that have no configuration
+     * items of their own.
+     *
+     * @return string
+     */
+    protected static function configPrefix()
     {
-        return sprintf('%s.%s', get_called_class(), $key);
+        return '';
     }
 
     /**
-     * @deprecated
+     * @param string $key
+     *
+     * @return string
      */
-    public static function configure($key, $value)
+    private static function getClassKey($key)
     {
-        Robo::config()->set(static::getClassKey($key), $value);
+        return sprintf('%s%s.%s', static::configPrefix(), get_called_class(), $key);
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param Config|null $config
+     */
+    public static function configure($key, $value, $config = null)
+    {
+        if (!$config) {
+            $config = Robo::config();
+        }
+        $config->setDefault(static::getClassKey($key), $value);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed|null $default
+     *
+     * @return mixed|null
+     */
     protected function getConfigValue($key, $default = null)
     {
         if (!$this->getConfig()) {

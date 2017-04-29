@@ -1,10 +1,8 @@
 <?php
 namespace Robo\Task\Filesystem;
 
-use Robo\Result;
 use Robo\Task\StackBasedTask;
 use Symfony\Component\Filesystem\Filesystem as sfFilesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Robo\Contract\BuilderAwareInterface;
 use Robo\Common\BuilderAwareTrait;
@@ -29,21 +27,24 @@ use Robo\Common\BuilderAwareTrait;
  * ?>
  * ```
  *
- * @method $this mkdir($dir)
- * @method $this touch($file)
- * @method $this copy($from, $to, $force = null)
- * @method $this chmod($file, $permissions, $umask = null, $recursive = null)
- * @method $this chgrp($file, $group, $recursive = null)
- * @method $this chown($file, $user, $recursive = null)
- * @method $this remove($file)
- * @method $this rename($from, $to)
- * @method $this symlink($from, $to)
- * @method $this mirror($from, $to)
+ * @method $this mkdir(string|array|\Traversable $dir, int $mode = 0777)
+ * @method $this touch(string|array|\Traversable $file, int $time = null, int $atime = null)
+ * @method $this copy(string $from, string $to, bool $force = false)
+ * @method $this chmod(string|array|\Traversable $file, int $permissions, int $umask = 0000, bool $recursive = false)
+ * @method $this chgrp(string|array|\Traversable $file, string $group, bool $recursive = false)
+ * @method $this chown(string|array|\Traversable $file, string $user, bool $recursive = false)
+ * @method $this remove(string|array|\Traversable $file)
+ * @method $this rename(string $from, string $to, bool $force = false)
+ * @method $this symlink(string $from, string $to, bool $copyOnWindows = false)
+ * @method $this mirror(string $from, string $to, \Traversable $iterator = null, array $options = [])
  */
 class FilesystemStack extends StackBasedTask implements BuilderAwareInterface
 {
     use BuilderAwareTrait;
 
+    /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
     protected $fs;
 
     public function __construct()
@@ -51,31 +52,62 @@ class FilesystemStack extends StackBasedTask implements BuilderAwareInterface
         $this->fs = new sfFilesystem();
     }
 
+    /**
+     * @return \Symfony\Component\Filesystem\Filesystem
+     */
     protected function getDelegate()
     {
         return $this->fs;
     }
 
+    /**
+     * @param string $from
+     * @param string $to
+     * @param bool $force
+     */
     protected function _copy($from, $to, $force = false)
     {
         $this->fs->copy($from, $to, $force);
     }
 
+    /**
+     * @param string|string[]|\Traversable $file
+     * @param int $permissions
+     * @param int $umask
+     * @param bool $recursive
+     */
     protected function _chmod($file, $permissions, $umask = 0000, $recursive = false)
     {
         $this->fs->chmod($file, $permissions, $umask, $recursive);
     }
 
+    /**
+     * @param string|string[]|\Traversable $file
+     * @param string $group
+     * @param bool $recursive
+     */
     protected function _chgrp($file, $group, $recursive = null)
     {
         $this->fs->chgrp($file, $group, $recursive);
     }
 
+    /**
+     * @param string|string[]|\Traversable $file
+     * @param string $user
+     * @param bool $recursive
+     */
     protected function _chown($file, $user, $recursive = null)
     {
         $this->fs->chown($file, $user, $recursive);
     }
 
+    /**
+     * @param string $origin
+     * @param string $target
+     * @param bool $overwrite
+     *
+     * @return null|true|\Robo\Result
+     */
     protected function _rename($origin, $target, $overwrite = false)
     {
         // we check that target does not exist
@@ -91,6 +123,12 @@ class FilesystemStack extends StackBasedTask implements BuilderAwareInterface
         return true;
     }
 
+    /**
+     * @param string $origin
+     * @param string $target
+     *
+     * @return null|\Robo\Result
+     */
     protected function crossVolumeRename($origin, $target)
     {
         // First step is to try to get rid of the target. If there
@@ -105,6 +143,8 @@ class FilesystemStack extends StackBasedTask implements BuilderAwareInterface
         if (file_exists($target)) {
             $this->fs->remove($target);
         }
+
+        /** @var \Robo\Result $result */
         $result = $this->collectionBuilder()->taskCopyDir([$origin => $target])->run();
         if (!$result->wasSuccessful()) {
             return $result;

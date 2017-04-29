@@ -2,7 +2,6 @@
 namespace Robo\Task\Development;
 
 use Robo\Task\BaseTask;
-use Symfony\Component\Process\ProcessUtils;
 use Robo\Result;
 
 /**
@@ -16,15 +15,29 @@ use Robo\Result;
  */
 class GenerateTask extends BaseTask
 {
+    /**
+     * @var string
+     */
     protected $className;
+
+    /**
+     * @var string
+     */
     protected $wrapperClassName;
 
+    /**
+     * @param string $className
+     * @param string $wrapperClassName
+     */
     public function __construct($className, $wrapperClassName = '')
     {
         $this->className = $className;
         $this->wrapperClassName = $wrapperClassName;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         $delegate = new \ReflectionClass($this->className);

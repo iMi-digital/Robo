@@ -2,7 +2,6 @@
 
 namespace Robo\Task\Remote;
 
-use Robo\Result;
 use Robo\Contract\CommandInterface;
 use Robo\Exception\TaskException;
 use Robo\Task\BaseTask;
@@ -41,22 +40,30 @@ use Robo\Contract\SimulatedInterface;
  * ```php
  * \Robo\Task\Remote\Ssh::configure('remoteDir', '/some-dir');
  * ```
- *
- * @method $this stopOnFail(bool $stopOnFail) Whether or not to chain commands together with &&
- *                                            and stop the chain if one command fails
- * @method $this remoteDir(string $remoteWorkingDirectory) Changes to the given directory before running commands
  */
 class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
 {
     use \Robo\Common\CommandReceiver;
     use \Robo\Common\ExecOneCommand;
 
+    /**
+     * @var null|string
+     */
     protected $hostname;
 
+    /**
+     * @var null|string
+     */
     protected $user;
 
+    /**
+     * @var bool
+     */
     protected $stopOnFail = true;
 
+    /**
+     * @var array
+     */
     protected $exec = [];
 
     /**
@@ -66,36 +73,69 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
      */
     protected $remoteDir;
 
+    /**
+     * @param null|string $hostname
+     * @param null|string $user
+     */
     public function __construct($hostname = null, $user = null)
     {
         $this->hostname = $hostname;
         $this->user = $user;
     }
 
+    /**
+     * @param string $hostname
+     *
+     * @return $this
+     */
     public function hostname($hostname)
     {
         $this->hostname = $hostname;
         return $this;
     }
 
+    /**
+     * @param string $user
+     *
+     * @return $this
+     */
     public function user($user)
     {
         $this->user = $user;
         return $this;
     }
 
+    /**
+     * Whether or not to chain commands together with && and stop the chain if one command fails.
+     *
+     * @param bool $stopOnFail
+     *
+     * @return $this
+     */
     public function stopOnFail($stopOnFail = true)
     {
         $this->stopOnFail = $stopOnFail;
         return $this;
     }
 
+    /**
+     * Changes to the given directory before running commands.
+     *
+     * @param string $remoteDir
+     *
+     * @return $this
+     */
     public function remoteDir($remoteDir)
     {
         $this->remoteDir = $remoteDir;
         return $this;
     }
 
+    /**
+     * @param string $filename
+     *
+     * @return $this
+     */
     public function identityFile($filename)
     {
         $this->option('-i', $filename);
@@ -103,6 +143,11 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
         return $this;
     }
 
+    /**
+     * @param int $port
+     *
+     * @return $this
+     */
     public function port($port)
     {
         $this->option('-p', $port);
@@ -110,6 +155,9 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function forcePseudoTty()
     {
         $this->option('-t');
@@ -117,6 +165,9 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function quiet()
     {
         $this->option('-q');
@@ -124,6 +175,9 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function verbose()
     {
         $this->option('-v');
@@ -132,7 +186,8 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
     }
 
     /**
-     * @param string|CommandInterface $command
+     * @param string|string[]|CommandInterface $command
+     *
      * @return $this
      */
     public function exec($command)
@@ -169,7 +224,7 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
     }
 
     /**
-     * @return \Robo\Result
+     * {@inheritdoc}
      */
     public function run()
     {
@@ -178,6 +233,9 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
         return $this->executeCommand($command);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function simulate($context)
     {
         $command = $this->getCommand();
@@ -198,6 +256,7 @@ class Ssh extends BaseTask implements CommandInterface, SimulatedInterface
      * Returns an ssh command string running $command on the remote.
      *
      * @param string|CommandInterface $command
+     *
      * @return string
      */
     protected function sshCommand($command)

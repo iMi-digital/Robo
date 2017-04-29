@@ -21,8 +21,7 @@ $this->taskBowerInstall('path/to/my/bower')
 * `forceLatest()`  adds `force-latest` option to bower
 * `noDev()`  adds `production` option to bower
 * `offline()`  adds `offline` option to bower
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
@@ -50,8 +49,7 @@ $this->taskBowerUpdate('path/to/my/bower')
 * `forceLatest()`  adds `force-latest` option to bower
 * `noDev()`  adds `production` option to bower
 * `offline()`  adds `offline` option to bower
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.

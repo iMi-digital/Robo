@@ -6,29 +6,53 @@ use Robo\Common\ExecCommand;
 use Robo\Contract\PrintedInterface;
 use Robo\Result;
 use Robo\Contract\CommandInterface;
-use Robo\Common\DynamicParams;
 use Robo\Exception\TaskException;
 
 abstract class CommandStack extends BaseTask implements CommandInterface, PrintedInterface
 {
     use ExecCommand;
 
+    /**
+     * @var string
+     */
     protected $executable;
+
     protected $result;
+
+    /**
+     * @var string[]
+     */
     protected $exec = [];
+
+    /**
+     * @var bool
+     */
     protected $stopOnFail = false;
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCommand()
     {
         return implode(' && ', $this->exec);
     }
 
+    /**
+     * @param string $executable
+     *
+     * @return $this
+     */
     public function executable($executable)
     {
         $this->executable = $executable;
         return $this;
     }
 
+    /**
+     * @param string|string[] $command
+     *
+     * @return $this
+     */
     public function exec($command)
     {
         if (is_array($command)) {
@@ -40,6 +64,11 @@ abstract class CommandStack extends BaseTask implements CommandInterface, Printe
         return $this;
     }
 
+    /**
+     * @param bool $stopOnFail
+     *
+     * @return $this
+     */
     public function stopOnFail($stopOnFail = true)
     {
         $this->stopOnFail = $stopOnFail;
@@ -52,6 +81,11 @@ abstract class CommandStack extends BaseTask implements CommandInterface, Printe
         return $this;
     }
 
+    /**
+     * @param string $command
+     *
+     * @return string
+     */
     protected function stripExecutableFromCommand($command)
     {
         $command = trim($command);
@@ -62,6 +96,9 @@ abstract class CommandStack extends BaseTask implements CommandInterface, Printe
         return $command;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         if (empty($this->exec)) {

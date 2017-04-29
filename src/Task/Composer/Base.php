@@ -1,18 +1,47 @@
 <?php
 namespace Robo\Task\Composer;
 
-use Robo\Robo;
-use Robo\Task\BaseTask;
+use Robo\Contract\CommandInterface;
 use Robo\Exception\TaskException;
+use Robo\Task\BaseTask;
 
-abstract class Base extends BaseTask
+abstract class Base extends BaseTask implements CommandInterface
 {
     use \Robo\Common\ExecOneCommand;
 
+    /**
+     * @var string
+     */
+    protected $command = '';
+
+    /**
+     * @var string
+     */
     protected $prefer;
+
+    /**
+     * @var string
+     */
     protected $dev;
+
+    /**
+     * @var string
+     */
     protected $optimizeAutoloader;
+
+    /**
+     * @var string
+     */
+    protected $ignorePlatformReqs;
+
+    /**
+     * @var string
+     */
     protected $ansi;
+
+    /**
+     * @var string
+     */
     protected $dir;
 
     /**
@@ -88,6 +117,22 @@ abstract class Base extends BaseTask
         return $this;
     }
 
+    /**
+     * adds `ignore-platform-reqs` option to composer
+     *
+     * @return $this
+     */
+    public function ignorePlatformRequirements()
+    {
+        $this->ignorePlatformReqs = '--ignore-platform-reqs';
+        return $this;
+    }
+
+    /**
+     * @param null|string $pathToComposer
+     *
+     * @throws \Robo\Exception\TaskException
+     */
     public function __construct($pathToComposer = null)
     {
         $this->command = $pathToComposer;
@@ -99,6 +144,9 @@ abstract class Base extends BaseTask
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCommand()
     {
         if (!isset($this->ansi) && $this->getConfig()->isDecorated()) {
@@ -107,6 +155,7 @@ abstract class Base extends BaseTask
         $this->option($this->prefer)
             ->option($this->dev)
             ->option($this->optimizeAutoloader)
+            ->option($this->ignorePlatformReqs)
             ->option($this->ansi);
         return "{$this->command} {$this->action}{$this->arguments}";
     }

@@ -1,13 +1,12 @@
 <?php
 namespace Robo\Task\Filesystem;
 
-use Robo\Collection\Temporary;
-
 trait loadTasks
 {
     /**
-     * @param $dirs
-     * @return CleanDir
+     * @param string|string[] $dirs
+     *
+     * @return \Robo\Task\Filesystem\CleanDir
      */
     protected function taskCleanDir($dirs)
     {
@@ -15,8 +14,9 @@ trait loadTasks
     }
 
     /**
-     * @param $dirs
-     * @return DeleteDir
+     * @param string|string[] $dirs
+     *
+     * @return \Robo\Task\Filesystem\DeleteDir
      */
     protected function taskDeleteDir($dirs)
     {
@@ -24,10 +24,11 @@ trait loadTasks
     }
 
     /**
-     * @param $prefix
-     * @param $base
-     * @param $includeRandomPart
-     * @return WorkDir
+     * @param string $prefix
+     * @param string $base
+     * @param bool $includeRandomPart
+     *
+     * @return \Robo\Task\Filesystem\WorkDir
      */
     protected function taskTmpDir($prefix = 'tmp', $base = '', $includeRandomPart = true)
     {
@@ -35,8 +36,9 @@ trait loadTasks
     }
 
     /**
-     * @param $finalDestination
-     * @return TmpDir
+     * @param string $finalDestination
+     *
+     * @return \Robo\Task\Filesystem\TmpDir
      */
     protected function taskWorkDir($finalDestination)
     {
@@ -44,8 +46,9 @@ trait loadTasks
     }
 
     /**
-     * @param $dirs
-     * @return CopyDir
+     * @param string|string[] $dirs
+     *
+     * @return \Robo\Task\Filesystem\CopyDir
      */
     protected function taskCopyDir($dirs)
     {
@@ -53,8 +56,9 @@ trait loadTasks
     }
 
     /**
-     * @param $dirs
-     * @return MirrorDir
+     * @param string|string[] $dirs
+     *
+     * @return \Robo\Task\Filesystem\MirrorDir
      */
     protected function taskMirrorDir($dirs)
     {
@@ -62,8 +66,9 @@ trait loadTasks
     }
 
     /**
-     * @param $dirs
-     * @return FlattenDir
+     * @param string|string[] $dirs
+     *
+     * @return \Robo\Task\Filesystem\FlattenDir
      */
     protected function taskFlattenDir($dirs)
     {
@@ -71,7 +76,7 @@ trait loadTasks
     }
 
     /**
-     * @return FilesystemStack
+     * @return \Robo\Task\Filesystem\FilesystemStack
      */
     protected function taskFilesystemStack()
     {

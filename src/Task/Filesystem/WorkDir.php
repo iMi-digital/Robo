@@ -3,8 +3,6 @@
 namespace Robo\Task\Filesystem;
 
 use Robo\Result;
-use Robo\Collection\Collection;
-use Robo\Contract\CompletionInterface;
 use Robo\Contract\RollbackInterface;
 use Robo\Contract\BuilderAwareInterface;
 use Robo\Common\BuilderAwareTrait;
@@ -28,8 +26,15 @@ use Robo\Common\BuilderAwareTrait;
 class WorkDir extends TmpDir implements RollbackInterface, BuilderAwareInterface
 {
     use BuilderAwareTrait;
+
+    /**
+     * @var string
+     */
     protected $finalDestination;
 
+    /**
+     * @param string $finalDestination
+     */
     public function __construct($finalDestination)
     {
         $this->finalDestination = $finalDestination;
@@ -43,6 +48,8 @@ class WorkDir extends TmpDir implements RollbackInterface, BuilderAwareInterface
 
     /**
      * Create our working directory.
+     *
+     * @return \Robo\Result
      */
     public function run()
     {
@@ -109,6 +116,8 @@ class WorkDir extends TmpDir implements RollbackInterface, BuilderAwareInterface
      * Get a reference to the path to the temporary directory, so that
      * it may be used to create other tasks.  Note that the directory
      * is not actually created until the task runs.
+     *
+     * @return string
      */
     public function getPath()
     {

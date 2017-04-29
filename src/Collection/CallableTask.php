@@ -3,7 +3,6 @@ namespace Robo\Collection;
 
 use Robo\Result;
 use Robo\Contract\TaskInterface;
-use Robo\Collection\Collection;
 
 /**
  * Creates a task wrapper that converts any Callable into an
@@ -14,7 +13,14 @@ use Robo\Collection\Collection;
  */
 class CallableTask implements TaskInterface
 {
+    /**
+     * @var callable
+     */
     protected $fn;
+
+    /**
+     * @var \Robo\Contract\TaskInterface
+     */
     protected $reference;
 
     public function __construct(callable $fn, TaskInterface $reference)
@@ -23,6 +29,9 @@ class CallableTask implements TaskInterface
         $this->reference = $reference;
     }
 
+    /**
+     * @return \Robo\Result
+     */
     public function run()
     {
         $result = call_user_func($this->fn);

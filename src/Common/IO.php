@@ -1,12 +1,7 @@
 <?php
 namespace Robo\Common;
 
-use Robo\Robo;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -16,13 +11,17 @@ trait IO
     use InputAwareTrait;
     use OutputAwareTrait;
 
-    /** var: SymfonyStyle */
+    /**
+     * @var \Symfony\Component\Console\Style\SymfonyStyle
+     */
     protected $io;
 
     /**
      * Provide access to SymfonyStyle object.
-     * See: http://symfony.com/blog/new-in-symfony-2-8-console-style-guide
+     *
      * @return SymfonyStyle
+     *
+     * @see http://symfony.com/blog/new-in-symfony-2-8-console-style-guide
      */
     protected function io()
     {
@@ -32,6 +31,12 @@ trait IO
         return $this->io;
     }
 
+    /**
+     * @param string $nonDecorated
+     * @param string $decorated
+     *
+     * @return string
+     */
     protected function decorationCharacter($nonDecorated, $decorated)
     {
         if (!$this->output()->isDecorated() || (strncasecmp(PHP_OS, 'WIN', 3) == 0)) {
@@ -40,12 +45,20 @@ trait IO
         return $decorated;
     }
 
+    /**
+     * @param string $text
+     */
     protected function say($text)
     {
         $char = $this->decorationCharacter('>', '➜');
         $this->writeln("$char  $text");
     }
 
+    /**
+     * @param string $text
+     * @param int $length
+     * @param string $color
+     */
     protected function yell($text, $length = 40, $color = 'green')
     {
         $char = $this->decorationCharacter(' ', '➜');
@@ -53,7 +66,12 @@ trait IO
         $this->formattedOutput($text, $length, $format);
     }
 
-    private function formattedOutput($text, $length, $format)
+    /**
+     * @param string $text
+     * @param int $length
+     * @param string $format
+     */
+    protected function formattedOutput($text, $length, $format)
     {
         $lines = explode("\n", trim($text, "\n"));
         $maxLineLength = array_reduce(array_map('strlen', $lines), 'max');
@@ -68,6 +86,12 @@ trait IO
         $this->writeln(sprintf($format, $space));
     }
 
+    /**
+     * @param string $question
+     * @param bool $hideAnswer
+     *
+     * @return string
+     */
     protected function ask($question, $hideAnswer = false)
     {
         if ($hideAnswer) {
@@ -76,6 +100,11 @@ trait IO
         return $this->doAsk(new Question($this->formatQuestion($question)));
     }
 
+    /**
+     * @param string $question
+     *
+     * @return string
+     */
     protected function askHidden($question)
     {
         $question = new Question($this->formatQuestion($question));
@@ -83,32 +112,59 @@ trait IO
         return $this->doAsk($question);
     }
 
+    /**
+     * @param string $question
+     * @param string $default
+     *
+     * @return string
+     */
     protected function askDefault($question, $default)
     {
         return $this->doAsk(new Question($this->formatQuestion("$question [$default]"), $default));
     }
 
+    /**
+     * @param string $question
+     *
+     * @return string
+     */
     protected function confirm($question)
     {
         return $this->doAsk(new ConfirmationQuestion($this->formatQuestion($question . ' (y/n)'), false));
     }
 
-    private function doAsk(Question $question)
+    /**
+     * @param \Symfony\Component\Console\Question\Question $question
+     *
+     * @return string
+     */
+    protected function doAsk(Question $question)
     {
         return $this->getDialog()->ask($this->input(), $this->output(), $question);
     }
 
-    private function formatQuestion($message)
+    /**
+     * @param string $message
+     *
+     * @return string
+     */
+    protected function formatQuestion($message)
     {
         return  "<question>?  $message</question> ";
     }
 
+    /**
+     * @return \Symfony\Component\Console\Helper\QuestionHelper
+     */
     protected function getDialog()
     {
         return new QuestionHelper();
     }
 
-    private function writeln($text)
+    /**
+     * @param $text
+     */
+    protected function writeln($text)
     {
         $this->output()->writeln($text);
     }

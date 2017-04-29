@@ -11,10 +11,16 @@ use Symfony\Component\Process\Process;
  */
 trait ExecCommand
 {
-    protected $isPrinted = true;
-    protected $workingDirectory;
+    use ExecTrait;
+
+    /**
+     * @var \Robo\Common\TimeKeeper
+     */
     protected $execTimer;
 
+    /**
+     * @return \Robo\Common\TimeKeeper
+     */
     protected function getExecTimer()
     {
         if (!isset($this->execTimer)) {
@@ -24,45 +30,14 @@ trait ExecCommand
     }
 
     /**
-     * Is command printing its output to screen
-     * @return bool
-     */
-    public function getPrinted()
-    {
-        return $this->isPrinted;
-    }
-
-    /**
-     * changes working directory of command
-     * @param $dir
-     * @return $this
-     */
-    public function dir($dir)
-    {
-        $this->workingDirectory = $dir;
-        return $this;
-    }
-
-
-    /**
-     * Should command output be printed
-     *
-     * @param $arg
-     * @return $this
-     */
-    public function printed($arg)
-    {
-        if (is_bool($arg)) {
-            $this->isPrinted = $arg;
-        }
-        return $this;
-    }
-
-    /**
      * Look for a "{$cmd}.phar" in the current working
      * directory; return a string to exec it if it is
      * found.  Otherwise, look for an executable command
      * of the same name via findExecutable.
+     *
+     * @param string $cmd
+     *
+     * @return bool|string
      */
     protected function findExecutablePhar($cmd)
     {
@@ -77,6 +52,10 @@ trait ExecCommand
      * with the provided name.  Favor vendor/bin in the
      * current project. If not found there, use
      * whatever is on the $PATH.
+     *
+     * @param string $cmd
+     *
+     * @return bool|string
      */
     protected function findExecutable($cmd)
     {
@@ -87,6 +66,11 @@ trait ExecCommand
         return false;
     }
 
+    /**
+     * @param string $cmd
+     *
+     * @return string
+     */
     private function searchForExecutable($cmd)
     {
         $projectBin = $this->findProjectBin();
@@ -99,15 +83,19 @@ trait ExecCommand
         return $finder->find($cmd, null, []);
     }
 
+    /**
+     * @return bool|string
+     */
     protected function findProjectBin()
     {
-        $candidates = [ __DIR__ . '/../../vendor/bin', __DIR__ . '/../../bin' ];
+        $cwd = getcwd();
+        $candidates = [ __DIR__ . '/../../vendor/bin', __DIR__ . '/../../bin', $cwd . '/vendor/bin' ];
 
         // If this project is inside a vendor directory, give highest priority
         // to that directory.
-        $vendorDirContainingUs = realpath(__DIR__ . '/../../../../..');
+        $vendorDirContainingUs = realpath(__DIR__ . '/../../../..');
         if (is_dir($vendorDirContainingUs) && (basename($vendorDirContainingUs) == 'vendor')) {
-            array_unshift($candidates, $vendorDirContainingUs);
+            array_unshift($candidates, $vendorDirContainingUs . '/bin');
         }
 
         foreach ($candidates as $dir) {
@@ -120,6 +108,10 @@ trait ExecCommand
 
     /**
      * Wrap Windows executables in 'call' per 7a88757d
+     *
+     * @param string $cmd
+     *
+     * @return string
      */
     protected function useCallOnWindows($cmd)
     {
@@ -132,27 +124,24 @@ trait ExecCommand
         return $cmd;
     }
 
+    protected function getCommandDescription()
+    {
+        return $this->process->getCommandLine();
+    }
+
     /**
-     * @param $command
-     * @return Result
+     * @param string $command
+     *
+     * @return \Robo\Result
      */
     protected function executeCommand($command)
     {
-        $process = new Process($command);
-        $process->setTimeout(null);
-        if ($this->workingDirectory) {
-            $process->setWorkingDirectory($this->workingDirectory);
-        }
-        $this->getExecTimer()->start();
-        if ($this->isPrinted) {
-            $process->run(function ($type, $buffer) {
-                print $buffer;
-            });
-        } else {
-            $process->run();
-        }
-        $this->getExecTimer()->stop();
-
-        return new Result($this, $process->getExitCode(), $process->getOutput(), ['time' => $this->getExecTimer()->elapsed()]);
+        $result_data = $this->execute(new Process($command));
+        return new Result(
+            $this,
+            $result_data->getExitCode(),
+            $result_data->getMessage(),
+            $result_data->getData()
+        );
     }
 }

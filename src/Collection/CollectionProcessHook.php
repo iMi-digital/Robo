@@ -2,7 +2,7 @@
 namespace Robo\Collection;
 
 use Consolidation\AnnotatedCommand\Hooks\ProcessResultInterface;
-use Consolidation\AnnotatedCommand\AnnotationData;
+use Consolidation\AnnotatedCommand\CommandData;
 use Robo\Contract\TaskInterface;
 use Robo\Result;
 
@@ -16,7 +16,13 @@ use Robo\Result;
  */
 class CollectionProcessHook implements ProcessResultInterface
 {
-    public function process($result, array $args, AnnotationData $annotations)
+    /**
+     * @param \Robo\Result|\Robo\Contract\TaskInterface $result
+     * @param \Consolidation\AnnotatedCommand\CommandData $commandData
+     *
+     * @return null|\Robo\Result
+     */
+    public function process($result, CommandData $commandData)
     {
         if ($result instanceof TaskInterface) {
             try {

@@ -1,7 +1,6 @@
 <?php
 namespace Robo\Task\Gulp;
 
-use Robo\Task\Gulp;
 use Robo\Contract\CommandInterface;
 
 /**
@@ -21,6 +20,9 @@ use Robo\Contract\CommandInterface;
  */
 class Run extends Base implements CommandInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         if (strlen($this->arguments)) {

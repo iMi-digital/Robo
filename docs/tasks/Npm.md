@@ -18,8 +18,7 @@ $this->taskNpmInstall('path/to/my/npm')
 ```
 
 * `noDev()`  adds `production` option to npm
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
@@ -44,8 +43,7 @@ $this->taskNpmUpdate('path/to/my/npm')
 ```
 
 * `noDev()`  adds `production` option to npm
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.

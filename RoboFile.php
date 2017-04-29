@@ -1,14 +1,12 @@
 <?php
 use Symfony\Component\Finder\Finder;
-use Robo\Result;
-use Robo\Collection\CollectionBuilder;
 
 class RoboFile extends \Robo\Tasks
 {
     /**
      * Run the Robo unit tests.
      */
-    public function test($args = "", $options =
+    public function test(array $args, $options =
         [
             'coverage-html' => false,
             'coverage' => false
@@ -46,13 +44,13 @@ class RoboFile extends \Robo\Tasks
         ]
     ) {
         $strict = $options['strict'] ? '' : '-n';
-        $result = $this->taskExec("./vendor/bin/phpcs --standard=PSR2 {$strict} {$file}")->run();
+        $result = $this->taskExec("./vendor/bin/phpcs --standard=PSR2 --exclude=Squiz.Classes.ValidClassName {$strict} {$file}")->run();
         if (!$result->wasSuccessful()) {
             if (!$options['autofix']) {
                 $options['autofix'] = $this->confirm('Would you like to run phpcbf to fix the reported errors?');
             }
             if ($options['autofix']) {
-                $result = $this->taskExec("./vendor/bin/phpcbf --standard=PSR2 {$file}")->run();
+                $result = $this->taskExec("./vendor/bin/phpcbf --standard=PSR2 --exclude=Squiz.Classes.ValidClassName {$file}")->run();
             }
         }
         return $result;
@@ -75,32 +73,45 @@ class RoboFile extends \Robo\Tasks
      */
     public function release($opts = ['beta' => false])
     {
-        $this->yell("Releasing Robo");
-        $stable = true;
-        if ($opts['beta']) {
-            $stable = false;
-            $this->say('non-stable release');
+        $version = \Robo\Robo::VERSION;
+        $stable = !$opts['beta'];
+        if ($stable) {
+            $version = preg_replace('/-.*/', '', $version);
         }
-
-        $releaseDescription = $this->ask("Description of Release\n");
+        else {
+            $version = $this->incrementVersion($version, 'beta');
+        }
+        $this->writeVersion($version);
+        $this->yell("Releasing Robo $version");
 
         $this->docs();
         $this->taskGitStack()
             ->add('-A')
-            ->commit("auto-update")
+            ->commit("Robo release $version")
             ->pull()
             ->push()
             ->run();
 
-        if ($stable) $this->pharPublish();
+        if ($stable) {
+            $this->pharPublish();
+        }
         $this->publish();
 
         $this->taskGitStack()
-            ->tag(\Robo\Robo::VERSION)
+            ->tag($version)
             ->push('origin master --tags')
             ->run();
 
-        if ($stable) $this->versionBump();
+        if ($stable) {
+            $version = $this->incrementVersion($version) . '-dev';
+            $this->writeVersion($version);
+
+            $this->taskGitStack()
+                ->add('-A')
+                ->commit("Prepare for $version")
+                ->push()
+                ->run();
+        }
     }
 
     /**
@@ -112,8 +123,9 @@ class RoboFile extends \Robo\Tasks
      */
     public function changed($addition)
     {
+        $version = preg_replace('/-.*/', '', \Robo\Robo::VERSION);
         return $this->taskChangelog()
-            ->version(\Robo\Robo::VERSION)
+            ->version($version)
             ->change($addition)
             ->run();
     }
@@ -123,18 +135,69 @@ class RoboFile extends \Robo\Tasks
      *
      * @param string $version The new verison for Robo.
      *   Defaults to the next minor (bugfix) version after the current relelase.
+     * @option stage The version stage: dev, alpha, beta or rc. Use empty for stable.
      */
-    public function versionBump($version = '')
+    public function versionBump($version = '', $options = ['stage' => ''])
     {
+        // If the user did not specify a version, then update the current version.
         if (empty($version)) {
-            $versionParts = explode('.', \Robo\Robo::VERSION);
-            $versionParts[count($versionParts)-1]++;
-            $version = implode('.', $versionParts);
+            $version = $this->incrementVersion(\Robo\Robo::VERSION, $options['stage']);
         }
+        return $this->writeVersion($version);
+    }
+
+    /**
+     * Write the specified version string back into the Robo.php file.
+     * @param string $version
+     */
+    protected function writeVersion($version)
+    {
+        // Write the result to a file.
         return $this->taskReplaceInFile(__DIR__.'/src/Robo.php')
-            ->from("VERSION = '".\Robo\Robo::VERSION."'")
+            ->regex("#VERSION = '[^']*'#")
             ->to("VERSION = '".$version."'")
             ->run();
+    }
+
+    /**
+     * Advance to the next SemVer version.
+     *
+     * The behavior depends on the parameter $stage.
+     *   - If $stage is empty, then the patch or minor version of $version is incremented
+     *   - If $stage matches the current stage in the current version, then add one
+     *     to the stage (e.g. alpha3 -> alpha4)
+     *   - If $stage does not match the current stage in the current version, then
+     *     reset to '1' (e.g. alpha4 -> beta1)
+     *
+     * @param string $version A SemVer version
+     * @param string $stage dev, alpha, beta, rc or an empty string for stable.
+     * @return string
+     */
+    protected function incrementVersion($version, $stage = '')
+    {
+        $stable = empty($stage);
+        $versionStageNumber = '0';
+        preg_match('/-([a-zA-Z]*)([0-9]*)/', $version, $match);
+        $match += ['', '', ''];
+        $versionStage = $match[1];
+        $versionStageNumber = $match[2];
+        if ($versionStage != $stage) {
+            $versionStageNumber = 0;
+        }
+        $version = preg_replace('/-.*/', '', $version);
+        $versionParts = explode('.', $version);
+        if ($stable) {
+            $versionParts[count($versionParts)-1]++;
+        }
+        $version = implode('.', $versionParts);
+        if (!$stable) {
+            $version .= '-' . $stage;
+            if ($stage != 'dev') {
+                $versionStageNumber++;
+                $version .= $versionStageNumber;
+            }
+        }
+        return $version;
     }
 
     /**
@@ -196,6 +259,25 @@ class RoboFile extends \Robo\Tasks
                         'setBuilder',
                         'getBuilder',
                         'collectionBuilder',
+                        'setVerbosityThreshold',
+                        'verbosityThreshold',
+                        'setOutputAdapter',
+                        'outputAdapter',
+                        'hasOutputAdapter',
+                        'verbosityMeetsThreshold',
+                        'writeMessage',
+                        'detectInteractive',
+                        'background',
+                        'timeout',
+                        'idleTimeout',
+                        'env',
+                        'envVars',
+                        'setInput',
+                        'interactive',
+                        'silent',
+                        'printed',
+                        'printOutput',
+                        'printMetadata',
                     ];
                     return !in_array($m->name, $undocumentedMethods) && $m->isPublic(); // methods are not documented
                 }
@@ -250,21 +332,15 @@ class RoboFile extends \Robo\Tasks
      */
     public function pharBuild()
     {
-        $uncommitted = exec('git diff-index --name-only HEAD --');
-        if (!empty($uncommitted)) {
-            $this->yell('Uncommitted changes present. Only committed files will be included in the phar.');
-        }
-
         // Create a collection builder to hold the temporary
         // directory until the pack phar task runs.
         $collection = $this->collectionBuilder();
 
         $workDir = $collection->tmpDir();
         $roboBuildDir = "$workDir/robo";
-        $sourceRepo = 'file://' . __DIR__ . '/.git';
 
         // Before we run `composer install`, we will remove the dev
-        // dependencies thatwe use in the unit tests.  Any dev dependency
+        // dependencies that we only use in the unit tests.  Any dev dependency
         // that is in the 'suggested' section is used by a core task;
         // we will include all of those in the phar.
         $devProjectsToRemove = $this->devDependenciesToRemoveFromPhar();
@@ -272,11 +348,24 @@ class RoboFile extends \Robo\Tasks
         // We need to create our work dir and run `composer install`
         // before we prepare the pack phar task, so create a separate
         // collection builder to do this step in.
-        $preparationResult = $this->collectionBuilder()
-            ->taskGitStack()
-                ->cloneRepo($sourceRepo, $roboBuildDir)
+        $prepTasks = $this->collectionBuilder();
+
+        $preparationResult = $prepTasks
             ->taskFilesystemStack()
-                ->remove("$workDir/robo/composer.lock")
+                ->mkdir($workDir)
+            ->taskRsync()
+                ->fromPath(
+                    [
+                        __DIR__ . '/composer.json',
+                        __DIR__ . '/scripts',
+                        __DIR__ . '/src',
+                        __DIR__ . '/data'
+                    ]
+                )
+                ->toPath($roboBuildDir)
+                ->recursive()
+                ->progress()
+                ->stats()
             ->taskComposerRemove()
                 ->dir($roboBuildDir)
                 ->dev()
@@ -302,7 +391,7 @@ class RoboFile extends \Robo\Tasks
             ->path('vendor')
             ->notPath('docs')
             ->notPath('/vendor\/.*\/[Tt]est/')
-            ->in($roboBuildDir);
+            ->in(is_dir($roboBuildDir) ? $roboBuildDir : __DIR__);
 
         // Build the phar
         return $collection
@@ -353,17 +442,19 @@ class RoboFile extends \Robo\Tasks
     {
         $this->pharBuild();
 
-        $this->_rename('robo.phar', 'robo-release.phar');
-        return $this->collectionBuilder()
-            ->taskGitStack()
-                ->checkout('gh-pages')
+        $this->collectionBuilder()
             ->taskFilesystemStack()
-                ->remove('robo.phar')
-                ->rename('robo-release.phar', 'robo.phar')
+                ->rename('robo.phar', 'robo-release.phar')
             ->taskGitStack()
-                ->add('robo.phar')
-                ->commit('robo.phar published')
-                ->push('origin', 'gh-pages')
+                ->checkout('site')
+                ->pull('origin site')
+            ->taskFilesystemStack()
+                ->remove('robotheme/robo.phar')
+                ->rename('robo-release.phar', 'robotheme/robo.phar')
+            ->taskGitStack()
+                ->add('robotheme/robo.phar')
+                ->commit('Update robo.phar to ' . \Robo\Robo::VERSION)
+                ->push('origin site')
                 ->checkout('master')
                 ->run();
     }

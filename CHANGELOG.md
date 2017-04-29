@@ -1,5 +1,18 @@
 # Changelog
 
+#### 1.0.6
+
+* Add configuration features to inject values into commandline option and task setter methods. Experimental; incompatible changes may be introduced prior to the stable release of configuration in version 1.1.0.
+
+#### 1.0.5
+
+* Incorporate word-wrapping from output-formatters 3.1.5
+* Incorporate custom event handlers from annotated-command 2.2.0
+
+#### 1.0.4
+
+* Updated to latest changes in `master` branch. Phar and tag issues.
+
 #### 1.0.0
 
 * [Collection] Add tasks to a collection, and implement them as a group with rollback

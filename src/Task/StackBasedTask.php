@@ -2,8 +2,6 @@
 namespace Robo\Task;
 
 use Robo\Result;
-use Robo\Task\BaseTask;
-use Robo\Contract\TaskInterface;
 
 /**
  * Extend StackBasedTask to create a Robo task that
@@ -59,10 +57,21 @@ use Robo\Contract\TaskInterface;
  */
 abstract class StackBasedTask extends BaseTask
 {
+    /**
+     * @var array
+     */
     protected $stack = [];
 
+    /**
+     * @var bool
+     */
     protected $stopOnFail = true;
 
+    /**
+     * @param bool $stop
+     *
+     * @return $this
+     */
     public function stopOnFail($stop = true)
     {
         $this->stopOnFail = $stop;
@@ -75,6 +84,8 @@ abstract class StackBasedTask extends BaseTask
      * is done, any method of the delegate is available as a method of
      * this class.  Calling one of the delegate's methods will defer
      * execution until the run() method is called.
+     *
+     * @return null
      */
     protected function getDelegate()
     {
@@ -85,6 +96,10 @@ abstract class StackBasedTask extends BaseTask
      * Derived classes that have more than one delegate may override
      * getCommandList to add as many delegate commands as desired to
      * the list of potential functions that __call() tried to find.
+     *
+     * @param string $function
+     *
+     * @return array
      */
     protected function getDelegateCommandList($function)
     {
@@ -93,10 +108,13 @@ abstract class StackBasedTask extends BaseTask
 
     /**
      * Print progress about the commands being executed
+     *
+     * @param string $command
+     * @param string $action
      */
     protected function printTaskProgress($command, $action)
     {
-        $this->printTaskInfo('{command} {action}', ['command' => "{$command[1]}", 'action' => json_encode($action)]);
+        $this->printTaskInfo('{command} {action}', ['command' => "{$command[1]}", 'action' => json_encode($action, JSON_UNESCAPED_SLASHES)]);
     }
 
     /**
@@ -104,6 +122,10 @@ abstract class StackBasedTask extends BaseTask
      * logic to result handling from functions. By default, it
      * is assumed that if a function returns in int, then
      * 0 == success, and any other value is the error code.
+     *
+     * @param int|\Robo\Result $function_result
+     *
+     * @return \Robo\Result
      */
     protected function processResult($function_result)
     {
@@ -117,6 +139,11 @@ abstract class StackBasedTask extends BaseTask
 
     /**
      * Record a function to call later.
+     *
+     * @param string $command
+     * @param array $args
+     *
+     * @return $this
      */
     protected function addToCommandStack($command, $args)
     {
@@ -129,7 +156,10 @@ abstract class StackBasedTask extends BaseTask
      * may be handled by __call automatically.  These operations will all
      * be deferred until this task's run() method is called.
      *
-     * @throws \BadMethodCallException
+     * @param string $function
+     * @param array $args
+     *
+     * @return $this
      */
     public function __call($function, $args)
     {
@@ -146,6 +176,9 @@ abstract class StackBasedTask extends BaseTask
         throw new \BadMethodCallException($message);
     }
 
+    /**
+     * @return int
+     */
     public function progressIndicatorSteps()
     {
         // run() will call advanceProgressIndicator() once for each
@@ -155,6 +188,8 @@ abstract class StackBasedTask extends BaseTask
 
     /**
      * Run all of the queued objects on the stack
+     *
+     * @return \Robo\Result
      */
     public function run()
     {
@@ -182,6 +217,11 @@ abstract class StackBasedTask extends BaseTask
 
     /**
      * Execute one task method
+     *
+     * @param string $command
+     * @param string $action
+     *
+     * @return \Robo\Result
      */
     protected function callTaskMethod($command, $action)
     {

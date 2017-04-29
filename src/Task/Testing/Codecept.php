@@ -5,6 +5,7 @@ use Robo\Contract\PrintedInterface;
 use Robo\Exception\TaskException;
 use Robo\Task\BaseTask;
 use Robo\Contract\CommandInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Executes Codeception tests
@@ -27,11 +28,17 @@ use Robo\Contract\CommandInterface;
 class Codecept extends BaseTask implements CommandInterface, PrintedInterface
 {
     use \Robo\Common\ExecOneCommand;
-
-    protected $suite = '';
-    protected $test = '';
+    
+    /**
+     * @var string
+     */
     protected $command;
 
+    /**
+     * @param string $pathToCodeception
+     *
+     * @throws \Robo\Exception\TaskException
+     */
     public function __construct($pathToCodeception = '')
     {
         $this->command = $pathToCodeception;
@@ -44,22 +51,33 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
         $this->command .= ' run';
     }
 
+    /**
+     * @param string $suite
+     *
+     * @return $this
+     */
     public function suite($suite)
     {
-        $this->suite = $suite;
+        $this->option(null, $suite);
         return $this;
     }
 
+    /**
+     * @param string $testName
+     *
+     * @return $this
+     */
     public function test($testName)
     {
-        $this->test = $testName;
+        $this->option(null, $testName);
         return $this;
     }
 
     /**
      * set group option. Can be called multiple times
      *
-     * @param $group
+     * @param string $group
+     *
      * @return $this
      */
     public function group($group)
@@ -68,6 +86,11 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
         return $this;
     }
 
+    /**
+     * @param string $group
+     *
+     * @return $this
+     */
     public function excludeGroup($group)
     {
         $this->option("skip-group", $group);
@@ -78,6 +101,7 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
      * generate json report
      *
      * @param string $file
+     *
      * @return $this
      */
     public function json($file = null)
@@ -90,6 +114,7 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
      * generate xml JUnit report
      *
      * @param string $file
+     *
      * @return $this
      */
     public function xml($file = null)
@@ -102,6 +127,7 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
      * Generate html report
      *
      * @param string $dir
+     *
      * @return $this
      */
     public function html($dir = null)
@@ -114,6 +140,7 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
      * generate tap report
      *
      * @param string $file
+     *
      * @return $this
      */
     public function tap($file = null)
@@ -125,7 +152,8 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
     /**
      * provides config file other then default `codeception.yml` with `-c` option
      *
-     * @param $file
+     * @param string $file
+     *
      * @return $this
      */
     public function configFile($file)
@@ -137,7 +165,8 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
     /**
      * collect codecoverage in raw format. You may pass name of cov file to save results
      *
-     * @param string $cov
+     * @param null|string $cov
+     *
      * @return $this
      */
     public function coverage($cov = null)
@@ -161,6 +190,7 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
      * collect code coverage in xml format. You may pass name of xml file to save results
      *
      * @param string $xml
+     *
      * @return $this
      */
     public function coverageXml($xml = null)
@@ -173,6 +203,7 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
      * collect code coverage and generate html report. You may pass
      *
      * @param string $html
+     *
      * @return $this
      */
     public function coverageHtml($html = null)
@@ -181,25 +212,37 @@ class Codecept extends BaseTask implements CommandInterface, PrintedInterface
         return $this;
     }
 
+    /**
+     * @param string $env
+     *
+     * @return $this
+     */
     public function env($env)
     {
         $this->option("env", $env);
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function debug()
     {
         $this->option("debug");
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCommand()
     {
-        $this->option(null, $this->suite)
-            ->option(null, $this->test);
         return $this->command . $this->arguments;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         $command = $this->getCommand();

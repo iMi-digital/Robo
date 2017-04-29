@@ -19,13 +19,8 @@ if ($this->taskExec('phpunit .')->run()->wasSuccessful()) {
 ?>
 ```
 
-* `background()`  Executes command in background mode (asynchronously)
-* `timeout($timeout)`  Stop command if it runs longer then $timeout in seconds
-* `idleTimeout($timeout)`  Stops command if it does not output something for a while
-* `env(array $env)`  Sets the environment variables for the command
-* `simulate($context)`  Called in place of `run()` for simulated tasks.
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `simulate($context)`  {@inheritdoc}
+* `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
@@ -49,14 +44,11 @@ $this->taskExecStack()
 ?>
 ```
 
-* `$this stopOnFail()` 
-
-* `executable($executable)` 
-* `exec($command)` 
-* `stopOnFail($stopOnFail = null)` 
+* `executable($executable)`   * `param string` $executable
+* `exec($command)`   * `param string|string[]` $command
+* `stopOnFail($stopOnFail = null)`   * `param bool` $stopOnFail
 * `result($result)` 
-* `dir($dir)`  changes working directory of command
-* `printed($arg)`  Should command output be printed
+* `dir($dir)`  Changes working directory of command
 
 ## ParallelExec
 
@@ -73,14 +65,7 @@ $this->taskParallelExec()
 ?>
 ```
 
-
-* ` timeout(int $timeout)`  stops process if it runs longer then `$timeout` (seconds)
-* ` idleTimeout(int $timeout)`  stops process if it does not output for time longer then `$timeout` (seconds)
-
-* `printed($isPrinted = null)` 
-* `process($command)` 
-* `timeout($timeout)` 
-* `idleTimeout($idleTimeout)` 
+* `process($command)`   * `param string|\Robo\Contract\CommandInterface` $command
 
 ## SymfonyCommand
 
@@ -102,7 +87,7 @@ $this->taskSymfonyCommand(new ModelGeneratorCommand())
 ?>
 ```
 
-* `arg($arg, $value)` 
+* `arg($arg, $value)`   * `param string` $arg
 * `opt($option, $value = null)` 
 
 ## Watch
@@ -122,5 +107,5 @@ $this->taskWatch()
 ?>
 ```
 
-* `monitor($paths, $callable)` 
+* `monitor($paths, $callable)`   * `param string|string[]` $paths
 
