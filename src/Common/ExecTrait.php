@@ -44,7 +44,7 @@ trait ExecTrait
     /**
      * @var boolean
      */
-    protected $interactive = false;
+    protected $interactive = null;
 
     /**
      * @var bool
@@ -86,6 +86,8 @@ trait ExecTrait
 
     /**
      * Sets $this->interactive() based on posix_isatty().
+     *
+     * @return $this
      */
     public function detectInteractive()
     {
@@ -96,6 +98,8 @@ trait ExecTrait
         if (!isset($this->interactive) && function_exists('posix_isatty') && $this->verbosityMeetsThreshold()) {
             $this->interactive = posix_isatty(STDOUT);
         }
+        
+        return $this;
     }
 
     /**
@@ -136,13 +140,24 @@ trait ExecTrait
     }
 
     /**
+     * Set a single environment variable, or multiple.
+     */
+    public function env($env, $value = null)
+    {
+        if (!is_array($env)) {
+            $env = [$env => ($value ? $value : true)];
+        }
+        return $this->envVars($env);
+    }
+
+    /**
      * Sets the environment variables for the command
      *
      * @param array $env
      *
      * @return $this
      */
-    public function env(array $env)
+    public function envVars(array $env)
     {
         $this->env = $env;
         return $this;
@@ -168,7 +183,7 @@ trait ExecTrait
      *
      * @return $this
      */
-    public function interactive($interactive)
+    public function interactive($interactive = true)
     {
         $this->interactive = $interactive;
         return $this;
