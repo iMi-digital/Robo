@@ -43,9 +43,14 @@ class Application extends SymfonyApplication
                 . "\n/**"
                 . "\n * This is project's console commands configuration for Robo task runner."
                 . "\n *"
-                . "\n * @see http://robo.li/"
+                . "\n * @see http://robo.li/ and http://www.github.com/imi-digital/irobo"
                 . "\n */"
-                . "\nclass " . $roboClass . " extends \\Robo\\Tasks\n{\n    // define public methods as commands\n}"
+                . "\nclass " . $roboClass . " extends \\Robo\\Tasks"
+	            . "\n{"
+	            . "\n   use \\iMi\\RoboPack\\LoadTasks;"
+                . "\n"
+                . "\n   // define public methods as commands"
+                . "\n}"
             );
             $output->writeln("<comment>  Edit this file to add your commands! </comment>");
         });
