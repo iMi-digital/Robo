@@ -6,7 +6,7 @@
  */
 class RoboFile extends \Robo\Tasks
 {
-
+	use \iMi\RoboPack\LoadTasks;
 
     public function testRoboParameters()
     {
