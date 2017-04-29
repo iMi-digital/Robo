@@ -4,8 +4,100 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a453daf278f6c65566e6cbd1e3cbbec",
+    "content-hash": "1cac8d00cec7c35e89e8cbafdb709457",
     "packages": [
+        {
+            "name": "brad-jones/robo-runner",
+            "version": "v0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brad-jones/robo-runner.git",
+                "reference": "32203c8b9197be37002398ecaa0bd090dcc0bdec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/brad-jones/robo-runner/zipball/32203c8b9197be37002398ecaa0bd090dcc0bdec",
+                "reference": "32203c8b9197be37002398ecaa0bd090dcc0bdec",
+                "shasum": ""
+            },
+            "require": {
+                "codegyre/robo": "^0.6|^0.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brads\\Robo\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A custom Robo Runner, that does not require an actual \"RoboFile.php\" just a class of your choosing.",
+            "homepage": "https://github.com/brad-jones/robo-runner",
+            "keywords": [
+                "custom",
+                "robo",
+                "runner",
+                "task"
+            ],
+            "abandoned": true,
+            "time": "2016-02-25T01:16:53+00:00"
+        },
+        {
+            "name": "brad-jones/robo-tasks",
+            "version": "v0.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brad-jones/robo-tasks.git",
+                "reference": "9ef50d5d06583911c20744661817054685f147ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/brad-jones/robo-tasks/zipball/9ef50d5d06583911c20744661817054685f147ef",
+                "reference": "9ef50d5d06583911c20744661817054685f147ef",
+                "shasum": ""
+            },
+            "require": {
+                "brad-jones/robo-runner": "^0.0.2",
+                "codegyre/robo": "^0.6.0|^0.7.0",
+                "danielstjules/stringy": "^2.2",
+                "guzzlehttp/guzzle": "^6.0"
+            },
+            "require-dev": {
+                "interconnectit/search-replace-db": "^3.0",
+                "jeremeamia/superclosure": "^2.0",
+                "phpmyadmin/phpmyadmin": "4.5.4.*",
+                "phpseclib/phpseclib": "^2.0",
+                "phpunit/phpunit": "^4.8",
+                "symfony/finder": "^2.0|^3.0",
+                "wp-cli/wp-cli": "^0.22.0"
+            },
+            "suggest": {
+                "interconnectit/search-replace-db": "Install this to support the SearchReplaceDb task.",
+                "jeremeamia/superclosure": "Install this to support the Wordpress Sandbox task.",
+                "phpseclib/phpseclib": "Install this to support any task using SSH/SFTP.",
+                "wp-cli/wp-cli": "Install this to support the Wordpress Sandbox task."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brads\\Robo\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Extra Tasks for the Robo Task Runner - http://robo.li/",
+            "homepage": "https://github.com/brad-jones/robo-tasks",
+            "keywords": [
+                "Tasks",
+                "robo"
+            ],
+            "abandoned": true,
+            "time": "2016-02-25T02:51:28+00:00"
+        },
         {
             "name": "consolidation/annotated-command",
             "version": "2.4.7",
@@ -186,6 +278,271 @@
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
+            "name": "danielstjules/stringy",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielstjules/Stringy.git",
+                "reference": "edbda419cbe4bcc3cb200b7c9811cb6597bf058b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/edbda419cbe4bcc3cb200b7c9811cb6597bf058b",
+                "reference": "edbda419cbe4bcc3cb200b7c9811cb6597bf058b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/polyfill-mbstring": "~1.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stringy\\": "src/"
+                },
+                "files": [
+                    "src/Create.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel St. Jules",
+                    "email": "danielst.jules@gmail.com",
+                    "homepage": "http://www.danielstjules.com"
+                }
+            ],
+            "description": "A string manipulation library with multibyte support",
+            "homepage": "https://github.com/danielstjules/Stringy",
+            "keywords": [
+                "UTF",
+                "helpers",
+                "manipulation",
+                "methods",
+                "multibyte",
+                "string",
+                "utf-8",
+                "utility",
+                "utils"
+            ],
+            "time": "2017-03-02T20:43:29+00:00"
+        },
+        {
+            "name": "guzzlehttp/guzzle",
+            "version": "6.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8d6c6cc55186db87b7dc5009827429ba4e9dc006",
+                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.4",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "^4.0",
+                "psr/log": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.2-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions_include.php"
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2017-02-28T22:50:30+00:00"
+        },
+        {
+            "name": "guzzlehttp/promises",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/promises.git",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle promises library",
+            "keywords": [
+                "promise"
+            ],
+            "time": "2016-12-20T10:07:11+00:00"
+        },
+        {
+            "name": "guzzlehttp/psr7",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/psr7.git",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "homepage": "https://github.com/Tobion"
+                }
+            ],
+            "description": "PSR-7 message implementation that also provides common utility methods",
+            "keywords": [
+                "http",
+                "message",
+                "request",
+                "response",
+                "stream",
+                "uri",
+                "url"
+            ],
+            "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "imi/robo-imi-pack",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "/home/amk/local-workspace/robo-imi-pack",
+                "reference": "1c6b4cb532dbd83e0b4f9545f18bfae108b05b79"
+            },
+            "require": {
+                "consolidation/robo": "^1.0.0",
+                "nordcode/robo-parameters": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "iMi\\RoboPack\\": "src",
+                    "iMi\\RoboPack\\Test\\": "test"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "iMi digital GmbH",
+                    "email": "a.menk@imi.de"
+                }
+            ],
+            "description": "iMi Package Tasks for Robo task runner",
+            "time": "2017-04-28T14:07:53+00:00"
+        },
+        {
             "name": "league/container",
             "version": "2.4.0",
             "source": {
@@ -249,6 +606,57 @@
                 "service"
             ],
             "time": "2017-03-06T15:24:06+00:00"
+        },
+        {
+            "name": "nordcode/robo-parameters",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nordcode/robo-parameters.git",
+                "reference": "c387b91879a6b25ead618a2f487581b40a0722c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nordcode/robo-parameters/zipball/c387b91879a6b25ead618a2f487581b40a0722c7",
+                "reference": "c387b91879a6b25ead618a2f487581b40a0722c7",
+                "shasum": ""
+            },
+            "require": {
+                "codegyre/robo": ">=0.5"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "^1.6",
+                "phpunit/phpunit": ">=4.8",
+                "satooshi/php-coveralls": "^1.0",
+                "squizlabs/php_codesniffer": ">=2.3.3",
+                "vlucas/phpdotenv": ">=2.0.0"
+            },
+            "suggest": {
+                "symfony/yaml": "Required for reading and writing YAML files",
+                "vlucas/phpdotenv": "Required for reading dotenv files"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "NordCode\\RoboParameters\\Test\\": "test",
+                    "NordCode\\RoboParameters\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Henning Kasch",
+                    "email": "henning.kasch@gmail.com"
+                }
+            ],
+            "description": "Parameter file writer for Robo task runner",
+            "time": "2016-08-26T14:01:29+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -444,6 +852,56 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -1613,71 +2071,6 @@
             "time": "2014-01-28T22:29:15+00:00"
         },
         {
-            "name": "guzzlehttp/psr7",
-            "version": "1.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/psr7.git",
-                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0",
-                "psr/http-message": "~1.0"
-            },
-            "provide": {
-                "psr/http-message-implementation": "1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Psr7\\": "src/"
-                },
-                "files": [
-                    "src/functions_include.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                },
-                {
-                    "name": "Tobias Schultze",
-                    "homepage": "https://github.com/Tobion"
-                }
-            ],
-            "description": "PSR-7 message implementation that also provides common utility methods",
-            "keywords": [
-                "http",
-                "message",
-                "request",
-                "response",
-                "stream",
-                "uri",
-                "url"
-            ],
-            "time": "2017-03-20T17:10:46+00:00"
-        },
-        {
             "name": "henrikbjorn/lurker",
             "version": "1.2.0",
             "source": {
@@ -2591,56 +2984,6 @@
                 "xunit"
             ],
             "time": "2016-12-08T20:27:08+00:00"
-        },
-        {
-            "name": "psr/http-message",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for HTTP messages",
-            "homepage": "https://github.com/php-fig/http-message",
-            "keywords": [
-                "http",
-                "http-message",
-                "psr",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "satooshi/php-coveralls",
