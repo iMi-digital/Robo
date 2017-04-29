@@ -35,14 +35,8 @@
         "symfony/event-dispatcher": "~2.5|~3.0",
         "squizlabs/php_codesniffer": "^2.8",
         "brad-jones/robo-tasks": "^0.3.3",
-        "imi/robo-imi-pack": "^0.1.0"
+        "imi/robo-pack": "^0.1.0"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "/home/amk/local-workspace/robo-imi-pack"
-        }
-    ],
     "require-dev": {
         "patchwork/jsqueeze": "~2",
         "henrikbjorn/lurker": "~1",
