@@ -433,29 +433,26 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
-    /**
-     * Publish Robo phar.
-     *
-     * Commits the phar executable to Robo's GitHub pages site.
-     */
-    public function pharPublish()
+	/**
+	 * Publish iRobo to github
+	 *
+	 * @return \Robo\Result
+	 */
+    public function iroboPharPublish()
     {
-        $this->pharBuild();
+    	$token = $this->ask('Github Token');
+    	$tag = $this->ask('Tag');
 
-        $this->collectionBuilder()
-            ->taskFilesystemStack()
-                ->rename('robo.phar', 'robo-release.phar')
-            ->taskGitStack()
-                ->checkout('site')
-                ->pull('origin site')
-            ->taskFilesystemStack()
-                ->remove('robotheme/robo.phar')
-                ->rename('robo-release.phar', 'robotheme/robo.phar')
-            ->taskGitStack()
-                ->add('robotheme/robo.phar')
-                ->commit('Update robo.phar to ' . \Robo\Robo::VERSION)
-                ->push('origin site')
-                ->checkout('master')
-                ->run();
+    	return $this->taskExecStack()
+		    ->exec('github-release release --security-token ' . escapeshellarg($token)
+		           . ' --user imi-digital --repo iRobo'
+		           . ' --tag ' . escapeshellarg($tag))
+		    ->exec('github-release upload --security-token ' . escapeshellarg($token)
+		           . ' --user imi-digital --repo iRobo'
+		           . ' --tag ' . escapeshellarg($tag)
+		           . ' --file robo.phar'
+			       . ' --name irobo'
+		    )
+		    ->run();
     }
 }
