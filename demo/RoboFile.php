@@ -12,5 +12,9 @@ class RoboFile extends \Robo\Tasks
     {
         $this->writeParameters('/tmp/test.xml')->run();
     }
-    // define public methods as commands
+
+    public function demoSetup()
+    {
+    	$this->askSetup();
+    }
 }

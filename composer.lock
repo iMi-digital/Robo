@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a539c74fbd12cbe5cfb4fe0e1077a11",
+    "content-hash": "7426091a1edd503038922658837b8f56",
     "packages": [
         {
             "name": "brad-jones/robo-runner",
@@ -620,16 +620,16 @@
         },
         {
             "name": "imi/robo-pack",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-pack.git",
-                "reference": "1c6b4cb532dbd83e0b4f9545f18bfae108b05b79"
+                "reference": "8a9a0bdbf967e1e9cf140cbac80e3f65bb002f61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/1c6b4cb532dbd83e0b4f9545f18bfae108b05b79",
-                "reference": "1c6b4cb532dbd83e0b4f9545f18bfae108b05b79",
+                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/8a9a0bdbf967e1e9cf140cbac80e3f65bb002f61",
+                "reference": "8a9a0bdbf967e1e9cf140cbac80e3f65bb002f61",
                 "shasum": ""
             },
             "require": {
@@ -654,7 +654,7 @@
                 }
             ],
             "description": "iMi Package Tasks for Robo task runner",
-            "time": "2017-04-28T14:07:53+00:00"
+            "time": "2017-04-29T09:05:07+00:00"
         },
         {
             "name": "league/container",
