@@ -17,4 +17,15 @@ class RoboFile extends \Robo\Tasks
     {
     	$this->askSetup();
     }
+
+    public function demoMagerun()
+    {
+    	$this->taskMagerunStack()->exec('sys:info')->run();
+    }
+
+    public function demoConrun()
+    {
+    	$this->taskConrunStack()->exec('db:info')->run();
+    }
+
 }
