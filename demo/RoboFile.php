@@ -28,4 +28,7 @@ class RoboFile extends \Robo\Tasks
     	$this->taskConrunStack()->exec('db:info')->run();
     }
 
+    public function demoWp() {
+	    $this->_wp('core version');
+    }
 }
