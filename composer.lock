@@ -620,22 +620,22 @@
         },
         {
             "name": "imi/robo-pack",
-            "version": "1.2.0",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-pack.git",
-                "reference": "6a242bc87479e2029c41e5f40a3ead420ba02b03"
+                "reference": "0831c68b43008ef79ad338a54e838f1b072a44c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/6a242bc87479e2029c41e5f40a3ead420ba02b03",
-                "reference": "6a242bc87479e2029c41e5f40a3ead420ba02b03",
+                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/0831c68b43008ef79ad338a54e838f1b072a44c6",
+                "reference": "0831c68b43008ef79ad338a54e838f1b072a44c6",
                 "shasum": ""
             },
             "require": {
                 "consolidation/robo": "^1.0.0",
                 "imi/robo-run": "^1.0.0",
-                "imi/robo-wpcli": "^0.1.0",
+                "imi/robo-wpcli": "^0.1.1",
                 "nordcode/robo-parameters": "^1.1"
             },
             "type": "library",
@@ -656,7 +656,7 @@
                 }
             ],
             "description": "iMi Package Tasks for Robo task runner",
-            "time": "2017-05-01T15:20:46+00:00"
+            "time": "2017-05-01T16:18:40+00:00"
         },
         {
             "name": "imi/robo-run",
@@ -696,16 +696,16 @@
         },
         {
             "name": "imi/robo-wpcli",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-wpcli.git",
-                "reference": "ffe65d4159103b5d8a38d52ffd0ceb5803ea30cb"
+                "reference": "0611dac230cbdd7bd351d3ef7336bf49c577981b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-wpcli/zipball/ffe65d4159103b5d8a38d52ffd0ceb5803ea30cb",
-                "reference": "ffe65d4159103b5d8a38d52ffd0ceb5803ea30cb",
+                "url": "https://api.github.com/repos/iMi-digital/robo-wpcli/zipball/0611dac230cbdd7bd351d3ef7336bf49c577981b",
+                "reference": "0611dac230cbdd7bd351d3ef7336bf49c577981b",
                 "shasum": ""
             },
             "require": {
@@ -728,7 +728,7 @@
                 }
             ],
             "description": "WP-CLI Wordpress Tasks for Robo task runner",
-            "time": "2017-05-01T15:11:21+00:00"
+            "time": "2017-05-01T15:43:36+00:00"
         },
         {
             "name": "league/container",
