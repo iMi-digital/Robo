@@ -18,7 +18,8 @@ use Symfony\Component\Process\Process;
 class Robo
 {
     const APPLICATION_NAME = 'iRobo';
-    const VERSION = '1.2.1+robo1.0.7';
+    const VERSION = '1.2.2';
+	const ROBO_BASE_VERSION = '1.0.7';
 
     /**
      * The currently active container object, or NULL if not initialized yet.
@@ -262,6 +263,8 @@ class Robo
     {
         $appName = $appName ?: self::APPLICATION_NAME;
         $appVersion = $appVersion ?: self::VERSION;
+
+        $appVersion .= ' based on robo ' . self::ROBO_BASE_VERSION;
 
         $app = new \Robo\Application($appName, $appVersion);
         $app->setAutoExit(false);

@@ -50,12 +50,23 @@ class Application extends SymfonyApplication
                 . "\n *"
                 . "\n * @see http://robo.li/ and http://www.github.com/imi-digital/irobo"
                 . "\n */"
+                . "\n"
+                . "\ndefine('IROBO_MIN_VERSION', '1.2.2'); // define minium irobo version here"
+                . "\n"
+                . "\nif (\\Robo\\Robo::APPLICATION_NAME != 'iRobo'"
+                . "\n   || \\Composer\\Semver\\Comparator::lessThan(\\Robo\\Robo::VERSION, IROBO_MIN_VERSION) > 0) {"
+	            . "\n   echo 'ERROR: This script needs iRobo (not only robo) version ' . IROBO_MIN_VERSION"
+	            . "\n   . ' or later - download at http://irobo.imi.de/irobo.phar '. PHP_EOL;"
+                . "\n   die(1);"
+                . "\n}"
+                . "\n"
                 . "\nclass " . $roboClass . " extends \\Robo\\Tasks"
 	            . "\n{"
 	            . "\n   use \\iMi\\RoboPack\\LoadTasks;"
                 . "\n"
                 . "\n   // define public methods as commands"
                 . "\n}"
+                . "\n"
             );
             $output->writeln("<comment>  Edit this file to add your commands! </comment>");
         });
