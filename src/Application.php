@@ -54,7 +54,7 @@ class Application extends SymfonyApplication
                 . "\ndefine('IROBO_MIN_VERSION', '1.2.2'); // define minium irobo version here"
                 . "\n"
                 . "\nif (\\Robo\\Robo::APPLICATION_NAME != 'iRobo'"
-                . "\n   || \\Composer\\Semver\\Comparator::lessThan(\\Robo\\Robo::VERSION, IROBO_MIN_VERSION) > 0) {"
+                . "\n   || \\Composer\\Semver\\Comparator::lessThan(\\Robo\\Robo::VERSION, IROBO_MIN_VERSION)) {"
 	            . "\n   echo 'ERROR: This script needs iRobo (not only robo) version ' . IROBO_MIN_VERSION"
 	            . "\n   . ' or later - download at http://irobo.imi.de/irobo.phar '. PHP_EOL;"
                 . "\n   die(1);"

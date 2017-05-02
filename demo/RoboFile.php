@@ -3,7 +3,7 @@
 define('IROBO_MIN_VERSION', '1.2.2');
 
 if (\Robo\Robo::APPLICATION_NAME != 'iRobo'
-    || \Composer\Semver\Comparator::lessThan(\Robo\Robo::VERSION, IROBO_MIN_VERSION) > 0) {
+    || \Composer\Semver\Comparator::lessThan(\Robo\Robo::VERSION, IROBO_MIN_VERSION)) {
 	echo 'ERROR: This script needs iRobo (not only robo) version ' . IROBO_MIN_VERSION
 	     . ' or later - download at http://irobo.imi.de/irobo.phar '. PHP_EOL;
 	die(1);
