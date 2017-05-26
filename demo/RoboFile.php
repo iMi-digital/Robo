@@ -33,6 +33,11 @@ class RoboFile extends \Robo\Tasks
     	$this->taskMagerunStack()->exec('sys:info')->run();
     }
 
+    public function demoMagerunTwo()
+    {
+    	$this->taskMagerunTwoStack()->exec('sys:info')->run();
+    }
+
     public function demoConrun()
     {
     	$this->taskConrunStack()->exec('db:info')->run();
