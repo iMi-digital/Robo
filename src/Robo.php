@@ -18,7 +18,7 @@ use Symfony\Component\Process\Process;
 class Robo
 {
     const APPLICATION_NAME = 'iRobo';
-    const VERSION = '1.2.3';
+    const VERSION = '1.3.0';
 	const ROBO_BASE_VERSION = '1.0.7';
 
     /**
