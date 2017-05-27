@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc8184083e33c7a99a3cc3132bf18417",
+    "content-hash": "28c2700fe4bd911376de7bfb94d6a900",
     "packages": [
         {
             "name": "brad-jones/robo-runner",
@@ -682,21 +682,21 @@
         },
         {
             "name": "imi/robo-pack",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-pack.git",
-                "reference": "f7ec1b6e1b48c9bee54356c5ae34880e80a60557"
+                "reference": "968adc63befdda7a96e01416782f42616a8a6422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/f7ec1b6e1b48c9bee54356c5ae34880e80a60557",
-                "reference": "f7ec1b6e1b48c9bee54356c5ae34880e80a60557",
+                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/968adc63befdda7a96e01416782f42616a8a6422",
+                "reference": "968adc63befdda7a96e01416782f42616a8a6422",
                 "shasum": ""
             },
             "require": {
                 "consolidation/robo": "^1.0.0",
-                "imi/robo-run": "^1.1.0",
+                "imi/robo-run": "^1.1.1",
                 "imi/robo-wpcli": "^0.1.1",
                 "nordcode/robo-parameters": "^1.1"
             },
@@ -718,20 +718,20 @@
                 }
             ],
             "description": "iMi Package Tasks for Robo task runner",
-            "time": "2017-05-26T08:42:07+00:00"
+            "time": "2017-05-27T10:32:30+00:00"
         },
         {
             "name": "imi/robo-run",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-run.git",
-                "reference": "f522021ecebf025b947350a225db12c21028a9c3"
+                "reference": "4944489bdff368dd1d4299022156c36b58b2386f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-run/zipball/f522021ecebf025b947350a225db12c21028a9c3",
-                "reference": "f522021ecebf025b947350a225db12c21028a9c3",
+                "url": "https://api.github.com/repos/iMi-digital/robo-run/zipball/4944489bdff368dd1d4299022156c36b58b2386f",
+                "reference": "4944489bdff368dd1d4299022156c36b58b2386f",
                 "shasum": ""
             },
             "require": {
@@ -754,7 +754,7 @@
                 }
             ],
             "description": "N98-magerun & IMI-Conrun Tasks for Robo task runner",
-            "time": "2017-05-26T08:41:13+00:00"
+            "time": "2017-05-27T10:31:43+00:00"
         },
         {
             "name": "imi/robo-wpcli",
@@ -1922,16 +1922,16 @@
         },
         {
             "name": "codeception/base",
-            "version": "2.3.1",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/base.git",
-                "reference": "c3beb9ff7fe829e4d9b66c1fdfcc99e85cad485f"
+                "reference": "122f8f333fc449f6f213f78cce0cfa3965cbb483"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/base/zipball/c3beb9ff7fe829e4d9b66c1fdfcc99e85cad485f",
-                "reference": "c3beb9ff7fe829e4d9b66c1fdfcc99e85cad485f",
+                "url": "https://api.github.com/repos/Codeception/base/zipball/122f8f333fc449f6f213f78cce0cfa3965cbb483",
+                "reference": "122f8f333fc449f6f213f78cce0cfa3965cbb483",
                 "shasum": ""
             },
             "require": {
@@ -1988,7 +1988,11 @@
                 "psr-4": {
                     "Codeception\\": "src\\Codeception",
                     "Codeception\\Extension\\": "ext"
-                }
+                },
+                "files": [
+                    "shim.php",
+                    "phpunit5-loggers.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2010,7 +2014,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2017-05-24T01:15:53+00:00"
+            "time": "2017-05-27T00:59:06+00:00"
         },
         {
             "name": "codeception/verify",

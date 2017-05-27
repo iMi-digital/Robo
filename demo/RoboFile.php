@@ -1,6 +1,6 @@
 <?php
 
-define('IROBO_MIN_VERSION', '1.2.2');
+define('IROBO_MIN_VERSION', '1.3.1');
 
 if (\Robo\Robo::APPLICATION_NAME != 'iRobo'
     || \Composer\Semver\Comparator::lessThan(\Robo\Robo::VERSION, IROBO_MIN_VERSION)) {
@@ -36,6 +36,11 @@ class RoboFile extends \Robo\Tasks
     public function demoMagerunTwo()
     {
     	$this->taskMagerunTwoStack()->exec('sys:info')->run();
+    }
+
+    public function demoMagerunTwoExec()
+    {
+    	$this->_magerunTwo('sys:info');
     }
 
     public function demoConrun()
