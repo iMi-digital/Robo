@@ -722,16 +722,16 @@
         },
         {
             "name": "imi/robo-run",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-run.git",
-                "reference": "4944489bdff368dd1d4299022156c36b58b2386f"
+                "reference": "c163ee919b971d4349cf225f1507b96765a7cd41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-run/zipball/4944489bdff368dd1d4299022156c36b58b2386f",
-                "reference": "4944489bdff368dd1d4299022156c36b58b2386f",
+                "url": "https://api.github.com/repos/iMi-digital/robo-run/zipball/c163ee919b971d4349cf225f1507b96765a7cd41",
+                "reference": "c163ee919b971d4349cf225f1507b96765a7cd41",
                 "shasum": ""
             },
             "require": {
@@ -754,7 +754,7 @@
                 }
             ],
             "description": "N98-magerun & IMI-Conrun Tasks for Robo task runner",
-            "time": "2017-05-27T10:31:43+00:00"
+            "time": "2017-05-27T11:17:34+00:00"
         },
         {
             "name": "imi/robo-wpcli",
