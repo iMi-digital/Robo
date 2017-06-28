@@ -1,4 +1,5 @@
 <?php
+
 namespace Robo;
 
 use Symfony\Component\Console\Application as SymfonyApplication;
@@ -41,7 +42,7 @@ class Application extends SymfonyApplication
         $createRoboFile->setCode(function () use ($roboClass, $roboFile) {
             $output = Robo::output();
             $output->writeln("<comment>  ~~~ Welcome to Robo! ~~~~ </comment>");
-            $output->writeln("<comment>  ". basename($roboFile) ." will be created in the current directory </comment>");
+            $output->writeln("<comment>  " . basename($roboFile) . " will be created in the current directory </comment>");
             file_put_contents(
                 $roboFile,
                 '<?php'
@@ -51,18 +52,18 @@ class Application extends SymfonyApplication
                 . "\n * @see http://robo.li/ and http://www.github.com/imi-digital/irobo"
                 . "\n */"
                 . "\n"
-                . "\ndefine('IROBO_MIN_VERSION', '1.2.2'); // define minium irobo version here"
+                . "\ndefine('IROBO_MIN_VERSION', '" . Robo::VERSION . "'); // define minium irobo version here"
                 . "\n"
                 . "\nif (\\Robo\\Robo::APPLICATION_NAME != 'iRobo'"
                 . "\n   || \\Composer\\Semver\\Comparator::lessThan(\\Robo\\Robo::VERSION, IROBO_MIN_VERSION)) {"
-	            . "\n   echo 'ERROR: This script needs iRobo (not only robo) version ' . IROBO_MIN_VERSION"
-	            . "\n   . ' or later - download at http://irobo.imi.de/irobo.phar '. PHP_EOL;"
+                . "\n   echo 'ERROR: This script needs iRobo (not only robo) version ' . IROBO_MIN_VERSION"
+                . "\n   . ' or later - download at http://irobo.imi.de/irobo.phar '. PHP_EOL;"
                 . "\n   die(1);"
                 . "\n}"
                 . "\n"
                 . "\nclass " . $roboClass . " extends \\Robo\\Tasks"
-	            . "\n{"
-	            . "\n   use \\iMi\\RoboPack\\LoadTasks;"
+                . "\n{"
+                . "\n   use \\iMi\\RoboPack\\LoadTasks;"
                 . "\n"
                 . "\n   // define public methods as commands"
                 . "\n}"
