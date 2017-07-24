@@ -19,3 +19,8 @@ chmod +x irobo.phar && sudo mv irobo.phar /usr/bin/irobo
 ```
 
 Now you can use it just like `irobo`.
+
+### Release Process
+
+1. Bump version in \Robo\Robo::VERSION
+2. Commit an push Tag
