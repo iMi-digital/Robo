@@ -51,4 +51,10 @@ class RoboFile extends \Robo\Tasks
     public function demoWp() {
 	    $this->_wp('core version');
     }
+
+    public function demoArtisan() {
+
+	$this->_artisan('env');
+
+    }
 }
