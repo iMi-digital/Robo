@@ -91,7 +91,7 @@ EOT
             );
         }
 
-        list( $latest, $downloadUrl ) = $this->getLatestReleaseFromGithub('consolidation/robo');
+        list( $latest, $downloadUrl ) = $this->getLatestReleaseFromGithub('iMi-digital/iRobo');
 
 
         if (Robo::VERSION == $latest) {
