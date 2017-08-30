@@ -18,8 +18,13 @@ use Symfony\Component\Process\Process;
 class Robo
 {
     const APPLICATION_NAME = 'iRobo';
+<<<<<<< Updated upstream
     const VERSION = '1.2.3';
 	const ROBO_BASE_VERSION = '1.0.7';
+=======
+    const VERSION = '1.8.0';
+	const ROBO_BASE_VERSION = '1.1.3-dev';
+>>>>>>> Stashed changes
 
     /**
      * The currently active container object, or NULL if not initialized yet.
