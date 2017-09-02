@@ -37,20 +37,16 @@ class Application extends SymfonyApplication {
     }
 
     protected function getTemplateRoboFiles() {
-        $base = dirname( __DIR__ );
-
-        $templates = [];
+        $base = __DIR__  . '/../';
+        $templates = ['Default' => ''];
 
         $finder = new Finder();
-        $finder->directories()->in( $base )->name( 'robofile-templates' );
-        foreach ( $finder as $directory ) {
-            $fileFinder = new Finder();
-            $fileFinder->files()->in( $directory->getRealPath() )->name( '*.php' );
-            foreach ( $fileFinder as $file ) {
-                $templates[ $file->getBasename( '.php' ) ] = $file->getRealPath();
-            }
+        $finder->files()->in( $base )->name( '*RoboFileTemplate.php' );
+        foreach ( $finder as $file ) {
+            $templateName = str_replace('RoboFileTemplate.php', '', $file->getBasename());
+            $templates[$templateName] = $file;
         }
-
+        ksort($templates);
         return $templates;
     }
 
@@ -75,7 +71,7 @@ class Application extends SymfonyApplication {
 
 
             $question = new ChoiceQuestion(
-                'Please select your template',
+                'Please select the template to be used',
                 array_keys($templates),
                 0
             );
@@ -87,23 +83,39 @@ class Application extends SymfonyApplication {
             $boilerPlate = "/**"
                            . "\n * This is project's console commands configuration for Robo task runner."
                            . "\n *"
-                           . "\n * @see http://robo.li/ and http://www.github.com/imi-digital/irobo"
+                           . "\n * @see http://www.github.com/imi-digital/irobo - http://irobo.imi.de/irobo.phar"
                            . "\n */"
                            . "\n"
                            . "\ndefine('IROBO_MIN_VERSION', '" . Robo::VERSION . "'); // define minimum irobo version here"
                            . "\n"
                            . "\nif (\\Robo\\Robo::APPLICATION_NAME != 'iRobo'"
-                           . "\n   || \\Composer\\Semver\\Comparator::lessThan(\\Robo\\Robo::VERSION, IROBO_MIN_VERSION)) {"
-                           . "\n   echo 'ERROR: This script needs iRobo (not only robo) version ' . IROBO_MIN_VERSION"
-                           . "\n   . ' or later - download at http://irobo.imi.de/irobo.phar or use irobo self-update to update'. PHP_EOL;"
-                           . "\n   die(1);"
+                           . "\n    || \\Composer\\Semver\\Comparator::lessThan(\\Robo\\Robo::VERSION, IROBO_MIN_VERSION)) {"
+                           . "\n    echo 'ERROR: This script needs iRobo, a fork of robo.li, version ' . IROBO_MIN_VERSION"
+                           . "\n        . ' or later - download at http://irobo.imi.de/irobo.phar or use irobo self-update to update'. PHP_EOL;"
+                           . "\n    die(1);"
                            . "\n}"
                            . "\n";
 
             $output->writeln( "<comment>  ~~~ Welcome to Robo! ~~~~ </comment>" );
             $output->writeln( "<comment>  " . basename( $roboFile ) . " will be created in the current directory </comment>" );
 
-            $contents = file_get_contents($templates[$choosenTemplate]);
+            if ($choosenTemplate == 'Default') {
+                $contents = <<<PHP
+<?php
+
+// INSERT: IROBO_BOILERPLATE //
+
+class RoboFile extends \Robo\Tasks {
+	use \iMi\RoboPack\LoadTasks;
+
+}
+
+PHP;
+
+            } else {
+                $contents = $templates[ $choosenTemplate ]->getContents();
+            }
+
             $contents = str_replace( '// INSERT: IROBO_BOILERPLATE //', $boilerPlate, $contents );
 
             file_put_contents(
