@@ -31,6 +31,7 @@ class RoboFile extends \Robo\Tasks
     public function demoMagerun()
     {
     	$this->taskMagerunStack()->exec('sys:info')->run();
+    	$this->_magerun('sys:info');
     }
 
     public function demoMagerunTwo()
