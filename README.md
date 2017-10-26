@@ -2,11 +2,15 @@
 
 iMi's fork of Robo.li
 
+iRobo = robo.li + robo-pack 
+
+See https://github.com/iMi-digital/robo-pack for more information about the addtional commands.
+
 ## Installing
 
 ### Phar
 
-[Download irobo>](http://irobo.imi.de/irobo.phar)
+[Download irobo](http://irobo.imi.de/irobo.phar)
 
 ```
 wget http://irobo.imi.de/irobo.phar
