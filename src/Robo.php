@@ -4,8 +4,9 @@ namespace Robo;
 use League\Container\Container;
 use League\Container\ContainerInterface;
 use Robo\Common\ProcessExecutor;
-use Robo\Config\ConfigProcessor;
-use Robo\Config\YamlConfigLoader;
+use Consolidation\Config\ConfigInterface;
+use Consolidation\Config\Loader\ConfigProcessor;
+use Consolidation\Config\Loader\YamlConfigLoader;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Process\Process;
@@ -18,13 +19,8 @@ use Symfony\Component\Process\Process;
 class Robo
 {
     const APPLICATION_NAME = 'iRobo';
-<<<<<<< Updated upstream
-    const VERSION = '1.2.3';
-	const ROBO_BASE_VERSION = '1.0.7';
-=======
-    const VERSION = '1.8.0';
+    const VERSION = '1.9.1';
 	const ROBO_BASE_VERSION = '1.1.3-dev';
->>>>>>> Stashed changes
 
     /**
      * The currently active container object, or NULL if not initialized yet.
@@ -119,7 +115,7 @@ class Robo
         foreach ($paths as $path) {
             $processor->extend($loader->load($path));
         }
-        $config->import($loader->export());
+        $config->import($processor->export());
     }
 
     /**
@@ -130,7 +126,7 @@ class Robo
      * @param null|\Symfony\Component\Console\Input\InputInterface $input
      * @param null|\Symfony\Component\Console\Output\OutputInterface $output
      * @param null|\Robo\Application $app
-     * @param null|\Robo\Config\Config $config
+     * @param null|ConfigInterface $config
      *
      * @return \League\Container\Container|\League\Container\ContainerInterface
      */
@@ -176,11 +172,11 @@ class Robo
      *
      * @param \League\Container\ContainerInterface $container
      * @param \Symfony\Component\Console\Application $app
-     * @param \Robo\Config\Config $config
+     * @param ConfigInterface $config
      * @param null|\Symfony\Component\Console\Input\InputInterface $input
      * @param null|\Symfony\Component\Console\Output\OutputInterface $output
      */
-    public static function configureContainer(ContainerInterface $container, SymfonyApplication $app, \Robo\Config\Config $config, $input = null, $output = null)
+    public static function configureContainer(ContainerInterface $container, SymfonyApplication $app, ConfigInterface $config, $input = null, $output = null)
     {
         // Self-referential container refernce for the inflector
         $container->add('container', $container);
@@ -193,7 +189,8 @@ class Robo
         if (!$output) {
             $output = new \Symfony\Component\Console\Output\ConsoleOutput();
         }
-        $config->setDecorated($output->isDecorated());
+        $config->set(Config::DECORATED, $output->isDecorated());
+        $config->set(Config::INTERACTIVE, $input->isInteractive());
 
         $container->share('application', $app);
         $container->share('config', $config);
@@ -214,7 +211,9 @@ class Robo
         $container->share('resultPrinter', \Robo\Log\ResultPrinter::class);
         $container->add('simulator', \Robo\Task\Simulator::class);
         $container->share('globalOptionsEventListener', \Robo\GlobalOptionsEventListener::class);
-        $container->share('injectConfigEventListener', \Robo\InjectConfigEventListener::class);
+        $container->share('injectConfigEventListener', \Consolidation\Config\Inject\ConfigForCommand::class)
+            ->withArgument('config')
+            ->withMethodCall('setApplication', ['application']);
         $container->share('collectionProcessHook', \Robo\Collection\CollectionProcessHook::class);
         $container->share('hookManager', \Consolidation\AnnotatedCommand\Hooks\HookManager::class)
             ->withMethodCall('addResultProcessor', ['collectionProcessHook', '*']);
@@ -346,7 +345,7 @@ class Robo
     }
 
     /**
-     * @return \Robo\Config\Config
+     * @return ConfigInterface
      */
     public static function config()
     {

@@ -98,7 +98,7 @@ trait ExecTrait
         if (!isset($this->interactive) && function_exists('posix_isatty') && $this->verbosityMeetsThreshold()) {
             $this->interactive = posix_isatty(STDOUT);
         }
-        
+
         return $this;
     }
 
@@ -305,7 +305,7 @@ trait ExecTrait
             $this->process->setInput($this->input);
         }
 
-        if ($this->interactive) {
+        if ($this->interactive && $this->isPrinted) {
             $this->process->setTty(true);
         }
 
@@ -317,9 +317,10 @@ trait ExecTrait
             $this->startTimer();
             $this->process->run();
             $this->stopTimer();
+            $output = rtrim($this->process->getOutput());
             return new ResultData(
                 $this->process->getExitCode(),
-                $this->process->getOutput(),
+                $output,
                 $this->getResultData()
             );
         }

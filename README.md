@@ -2,11 +2,15 @@
 
 iMi's fork of Robo.li
 
+iRobo = robo.li + robo-pack 
+
+See https://github.com/iMi-digital/robo-pack for more information about the addtional commands.
+
 ## Installing
 
 ### Phar
 
-[Download irobo>](http://irobo.imi.de/irobo.phar)
+[Download irobo](http://irobo.imi.de/irobo.phar)
 
 ```
 wget http://irobo.imi.de/irobo.phar
@@ -26,3 +30,11 @@ Now you can use it just like `irobo`.
     ./robo irobo:phar-publish
 
 needs https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2 to publish on GitHub
+
+### Release Process
+
+1. Bump version in \Robo\Robo::VERSION
+2. Commit and `git push`; `git push --tags`
+3. `./robo phar:build`
+4. check `./robo.phar`
+5. `./robo irobo:phar-publish`

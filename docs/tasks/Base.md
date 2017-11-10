@@ -25,7 +25,8 @@ if ($this->taskExec('phpunit .')->run()->wasSuccessful()) {
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
 * `rawArg($arg)`  Pass the provided string in its raw (as provided) form as an argument to executable.
 * `option($option, $value = null, $separator = null)`  Pass option to executable. Options are prefixed with `--` , value can be provided in second parameter.
-* `optionList($option, $value = null, $separator = null)`  Pass multiple options to executable. Value can be a string or array.
+* `options(array $options, $separator = null)`  Pass multiple options to executable. The associative array contains
+* `optionList($option, $value = null, $separator = null, $separator = null)`  Pass an option with multiple values to executable. Value can be a string or array.
 
 ## ExecStack
 
@@ -66,6 +67,7 @@ $this->taskParallelExec()
 ```
 
 * `process($command)`   * `param string|\Robo\Contract\CommandInterface` $command
+* `waitInterval($waitInterval)`  Parallel processing will wait `$waitInterval` seconds after launching each process and before
 
 ## SymfonyCommand
 

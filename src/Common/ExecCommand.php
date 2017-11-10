@@ -89,7 +89,9 @@ trait ExecCommand
     protected function findProjectBin()
     {
         $cwd = getcwd();
-        $candidates = [ __DIR__ . '/../../vendor/bin', __DIR__ . '/../../bin', $cwd . '/vendor/bin' ];
+        // $candidates = [ __DIR__ . '/../../vendor/bin', __DIR__ . '/../../bin', $cwd . '/vendor/bin' ];
+	    // PATCH iMi  see https://github.com/consolidation/Robo/issues/613
+        $candidates = [ $cwd . '/vendor/bin' ];
 
         // If this project is inside a vendor directory, give highest priority
         // to that directory.
