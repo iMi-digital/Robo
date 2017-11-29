@@ -94,6 +94,9 @@ class Application extends SymfonyApplication {
                            . "\n        . ' or later - download at http://irobo.imi.de/irobo.phar or use irobo self-update to update'. PHP_EOL;"
                            . "\n    die(1);"
                            . "\n}"
+                           . "\n"
+                           . "\nThis template is based on iRobo version" . Robo::VERSION
+                           . "\n"
                            . "\n";
 
             $output->writeln( "<comment>  ~~~ Welcome to Robo! ~~~~ </comment>" );
