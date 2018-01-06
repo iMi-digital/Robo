@@ -26,9 +26,9 @@ Now you can use it just like `irobo`.
 
 ### Using Phive
 
-Download using phar.io[https://phar.io] / Phive:
+Download using [phar.io](https://phar.io) / Phive:
 
-`phive install iMi-digital/iRobo`
+`sudo phive install -g iMi-digital/irobo`
 
 ### Release Process
 
