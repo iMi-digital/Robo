@@ -433,6 +433,14 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
+
+    public function iroboSign()
+    {
+        // signing key: a.menk@imi.de
+        $this->_exec('gpg -u 5AECD819 --detach-sign --output robo.phar.asc robo.phar');
+    }
+
+
 	/**
 	 * Publish iRobo to github
 	 *
@@ -447,11 +455,25 @@ class RoboFile extends \Robo\Tasks
 		    ->exec('github-release release --security-token ' . escapeshellarg($token)
 		           . ' --user imi-digital --repo iRobo'
 		           . ' --tag ' . escapeshellarg($tag))
+            // we upload a .phar and the same file without extension
+            // .phar seems to be needed for Phive installer
+		    ->exec('github-release upload --security-token ' . escapeshellarg($token)
+		           . ' --user imi-digital --repo iRobo'
+		           . ' --tag ' . escapeshellarg($tag)
+		           . ' --file robo.phar'
+			       . ' --name irobo.phar'
+		    )
 		    ->exec('github-release upload --security-token ' . escapeshellarg($token)
 		           . ' --user imi-digital --repo iRobo'
 		           . ' --tag ' . escapeshellarg($tag)
 		           . ' --file robo.phar'
 			       . ' --name irobo'
+		    )
+		    ->exec('github-release upload --security-token ' . escapeshellarg($token)
+		           . ' --user imi-digital --repo iRobo'
+		           . ' --tag ' . escapeshellarg($tag)
+		           . ' --file robo.phar.asc'
+			       . ' --name irobo.phar.asc'
 		    )
 		    ->run();
     }

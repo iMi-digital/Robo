@@ -24,6 +24,12 @@ chmod +x irobo.phar && sudo mv irobo.phar /usr/bin/irobo
 
 Now you can use it just like `irobo`.
 
+### Using Phive
+
+Download using phar.io[https://phar.io] / Phive:
+
+`phive install iMi-digital/iRobo`
+
 ### Release Process
 
 1. Bump version in \Robo\Robo::VERSION
