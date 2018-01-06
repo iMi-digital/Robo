@@ -733,16 +733,16 @@
         },
         {
             "name": "imi/robo-laravel",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-laravel.git",
-                "reference": "b989bf920ec90b9db6a88375813cb813cb2a1135"
+                "reference": "bae017e4b9f5818cf6dabdbcbda4f85db34843c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-laravel/zipball/b989bf920ec90b9db6a88375813cb813cb2a1135",
-                "reference": "b989bf920ec90b9db6a88375813cb813cb2a1135",
+                "url": "https://api.github.com/repos/iMi-digital/robo-laravel/zipball/bae017e4b9f5818cf6dabdbcbda4f85db34843c5",
+                "reference": "bae017e4b9f5818cf6dabdbcbda4f85db34843c5",
                 "shasum": ""
             },
             "require": {
@@ -765,7 +765,7 @@
                 }
             ],
             "description": "Laravel Tasks for Robo task runner",
-            "time": "2017-09-02T15:47:34+00:00"
+            "time": "2017-12-06T13:59:38+00:00"
         },
         {
             "name": "imi/robo-pack",
