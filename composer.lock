@@ -885,16 +885,16 @@
         },
         {
             "name": "imi/robo-typo3",
-            "version": "1.3.2",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
-                "url": "git@github.com:iMi-digital/robo-typo3.git",
-                "reference": "df957a83766786712ed5dce0aac92ce6fd2f2fa3"
+                "url": "https://github.com/iMi-digital/robo-typo3.git",
+                "reference": "25bc6756eff62efa52a6df4092acbf2ce3b50a58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-typo3/zipball/df957a83766786712ed5dce0aac92ce6fd2f2fa3",
-                "reference": "df957a83766786712ed5dce0aac92ce6fd2f2fa3",
+                "url": "https://api.github.com/repos/iMi-digital/robo-typo3/zipball/25bc6756eff62efa52a6df4092acbf2ce3b50a58",
+                "reference": "25bc6756eff62efa52a6df4092acbf2ce3b50a58",
                 "shasum": ""
             },
             "require": {
@@ -918,7 +918,7 @@
                 }
             ],
             "description": "Typo3 Tasks for Robo task runner",
-            "time": "2018-03-01T16:08:54+00:00"
+            "time": "2018-03-02T07:50:16+00:00"
         },
         {
             "name": "imi/robo-wpcli",
