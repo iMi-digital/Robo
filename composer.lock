@@ -316,16 +316,16 @@
         },
         {
             "name": "consolidation/output-formatters",
-            "version": "3.1.13",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consolidation/output-formatters.git",
-                "reference": "3188461e965b32148c8fb85261833b2b72d34b8c"
+                "reference": "da889e4bce19f145ca4ec5b1725a946f4eb625a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consolidation/output-formatters/zipball/3188461e965b32148c8fb85261833b2b72d34b8c",
-                "reference": "3188461e965b32148c8fb85261833b2b72d34b8c",
+                "url": "https://api.github.com/repos/consolidation/output-formatters/zipball/da889e4bce19f145ca4ec5b1725a946f4eb625a9",
+                "reference": "da889e4bce19f145ca4ec5b1725a946f4eb625a9",
                 "shasum": ""
             },
             "require": {
@@ -334,10 +334,16 @@
                 "symfony/finder": "^2.5|^3|^4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8",
-                "satooshi/php-coveralls": "^1.0.2 | dev-master",
+                "g-1-a/composer-test-scenarios": "^2",
+                "phpunit/phpunit": "^5.7.27",
+                "satooshi/php-coveralls": "^2",
                 "squizlabs/php_codesniffer": "^2.7",
+                "symfony/console": "3.2.3",
+                "symfony/var-dumper": "^2.8|^3|^4",
                 "victorjonsson/markdowndocs": "^1.3"
+            },
+            "suggest": {
+                "symfony/var-dumper": "For using the var_dump formatter"
             },
             "type": "library",
             "extra": {
@@ -361,7 +367,7 @@
                 }
             ],
             "description": "Format text by applying transformations provided by plug-in formatters.",
-            "time": "2017-11-29T15:25:38+00:00"
+            "time": "2018-03-20T15:18:32+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -771,16 +777,16 @@
         },
         {
             "name": "imi/robo-laravel",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-laravel.git",
-                "reference": "bae017e4b9f5818cf6dabdbcbda4f85db34843c5"
+                "reference": "be402ed8d4e8cdc889057c4131a0675d513a07eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-laravel/zipball/bae017e4b9f5818cf6dabdbcbda4f85db34843c5",
-                "reference": "bae017e4b9f5818cf6dabdbcbda4f85db34843c5",
+                "url": "https://api.github.com/repos/iMi-digital/robo-laravel/zipball/be402ed8d4e8cdc889057c4131a0675d513a07eb",
+                "reference": "be402ed8d4e8cdc889057c4131a0675d513a07eb",
                 "shasum": ""
             },
             "require": {
@@ -803,7 +809,7 @@
                 }
             ],
             "description": "Laravel Tasks for Robo task runner",
-            "time": "2017-12-06T13:59:38+00:00"
+            "time": "2018-03-13T09:21:19+00:00"
         },
         {
             "name": "imi/robo-pack",
@@ -1298,7 +1304,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -1367,7 +1373,7 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
@@ -1423,7 +1429,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -1486,7 +1492,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -1535,16 +1541,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "6a615613745cef820d807443f32076bb9f5d0a38"
+                "reference": "a479817ce0a9e4adfd7d39c6407c95d97c254625"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/6a615613745cef820d807443f32076bb9f5d0a38",
-                "reference": "6a615613745cef820d807443f32076bb9f5d0a38",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/a479817ce0a9e4adfd7d39c6407c95d97c254625",
+                "reference": "a479817ce0a9e4adfd7d39c6407c95d97c254625",
                 "shasum": ""
             },
             "require": {
@@ -1580,7 +1586,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-02-11T17:15:12+00:00"
+            "time": "2018-03-05T18:28:11+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1643,7 +1649,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -1982,16 +1988,16 @@
         },
         {
             "name": "codeception/phpunit-wrapper",
-            "version": "6.0.5",
+            "version": "6.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/phpunit-wrapper.git",
-                "reference": "44e2100c300413a6b40cf8874ad402695010f443"
+                "reference": "e18f3ea1f841bfd2cecaf6e183e584127b9d467b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/phpunit-wrapper/zipball/44e2100c300413a6b40cf8874ad402695010f443",
-                "reference": "44e2100c300413a6b40cf8874ad402695010f443",
+                "url": "https://api.github.com/repos/Codeception/phpunit-wrapper/zipball/e18f3ea1f841bfd2cecaf6e183e584127b9d467b",
+                "reference": "e18f3ea1f841bfd2cecaf6e183e584127b9d467b",
                 "shasum": ""
             },
             "require": {
@@ -1999,6 +2005,13 @@
                 "phpunit/phpunit": ">=4.8.28 <5.0.0 || >=5.6.3 <7.0",
                 "sebastian/comparator": ">1.1 <3.0",
                 "sebastian/diff": ">=1.4 <4.0"
+            },
+            "replace": {
+                "codeception/phpunit-wrapper": "*"
+            },
+            "require-dev": {
+                "codeception/specify": "*",
+                "vlucas/phpdotenv": "^2.4"
             },
             "type": "library",
             "autoload": {
@@ -2017,7 +2030,7 @@
                 }
             ],
             "description": "PHPUnit classes used by Codeception",
-            "time": "2018-02-19T13:24:40+00:00"
+            "time": "2018-03-16T10:17:47+00:00"
         },
         {
             "name": "codeception/stub",
@@ -4057,7 +4070,7 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
@@ -4114,7 +4127,7 @@
         },
         {
             "name": "symfony/config",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -4177,7 +4190,7 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -4230,7 +4243,7 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
@@ -4286,7 +4299,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
@@ -4335,7 +4348,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
