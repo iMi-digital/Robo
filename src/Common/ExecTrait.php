@@ -299,8 +299,9 @@ trait ExecTrait
         }
         $this->process->setTimeout($this->timeout);
         $this->process->setIdleTimeout($this->idleTimeout);
-        $this->process->setWorkingDirectory($this->workingDirectory);
-
+        if ($this->workingDirectory) {
+            $this->process->setWorkingDirectory($this->workingDirectory);
+        }
         if ($this->input) {
             $this->process->setInput($this->input);
         }
@@ -368,11 +369,26 @@ trait ExecTrait
     protected function printAction($context = [])
     {
         $command = $this->getCommandDescription();
+        $formatted_command = $this->formatCommandDisplay($command);
+
         $dir = $this->workingDirectory ? " in {dir}" : "";
         $this->printTaskInfo("Running {command}$dir", [
-                'command' => $command,
+                'command' => $formatted_command,
                 'dir' => $this->workingDirectory
             ] + $context);
+    }
+
+    /**
+     * @param $command
+     *
+     * @return mixed
+     */
+    protected function formatCommandDisplay($command)
+    {
+        $formatted_command = str_replace("&&", "&&\n", $command);
+        $formatted_command = str_replace("||", "||\n", $formatted_command);
+
+        return $formatted_command;
     }
 
     /**

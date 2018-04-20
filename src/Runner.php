@@ -1,6 +1,7 @@
 <?php
 namespace Robo;
 
+use Composer\Autoload\ClassLoader;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\StringInput;
 use Robo\Contract\BuilderAwareInterface;
@@ -39,6 +40,21 @@ class Runner implements ContainerAwareInterface
     protected $errorConditions = [];
 
     /**
+     * @var string GitHub Repo for SelfUpdate
+     */
+    protected $selfUpdateRepository = null;
+
+    /**
+     * @var \Composer\Autoload\ClassLoader
+     */
+    protected $classLoader = null;
+
+    /**
+     * @var string
+     */
+    protected $relativePluginNamespace;
+
+    /**
      * Class Constructor
      *
      * @param null|string $roboClass
@@ -52,7 +68,7 @@ class Runner implements ContainerAwareInterface
         $this->dir = getcwd();
     }
 
-    protected function errorCondtion($msg, $errorType)
+    protected function errorCondition($msg, $errorType)
     {
         $this->errorConditions[$msg] = $errorType;
     }
@@ -77,7 +93,7 @@ class Runner implements ContainerAwareInterface
             return true;
         }
         if (!file_exists($this->dir)) {
-            $this->errorCondtion("Path `{$this->dir}` is invalid; please provide a valid absolute path to the Robofile to load.", 'red');
+            $this->errorCondition("Path `{$this->dir}` is invalid; please provide a valid absolute path to the Robofile to load.", 'red');
             return false;
         }
 
@@ -86,13 +102,13 @@ class Runner implements ContainerAwareInterface
         $roboFilePath = $realDir . DIRECTORY_SEPARATOR . $this->roboFile;
         if (!file_exists($roboFilePath)) {
             $requestedRoboFilePath = $this->dir . DIRECTORY_SEPARATOR . $this->roboFile;
-            $this->errorCondtion("Requested RoboFile `$requestedRoboFilePath` is invalid, please provide valid absolute path to load Robofile.", 'red');
+            $this->errorCondition("Requested RoboFile `$requestedRoboFilePath` is invalid, please provide valid absolute path to load Robofile.", 'red');
             return false;
         }
         require_once $roboFilePath;
 
         if (!class_exists($this->roboClass)) {
-            $this->errorCondtion("Class {$this->roboClass} was not loaded.", 'red');
+            $this->errorCondition("Class {$this->roboClass} was not loaded.", 'red');
             return false;
         }
         return true;
@@ -115,7 +131,7 @@ class Runner implements ContainerAwareInterface
             $app = Robo::createDefaultApplication($appName, $appVersion);
         }
         $commandFiles = $this->getRoboFileCommands($output);
-        return $this->run($argv, $output, $app, $commandFiles);
+        return $this->run($argv, $output, $app, $commandFiles, $this->classLoader);
     }
 
     /**
@@ -123,10 +139,11 @@ class Runner implements ContainerAwareInterface
      * @param null|\Symfony\Component\Console\Output\OutputInterface $output
      * @param null|\Robo\Application $app
      * @param array[] $commandFiles
+     * @param null|ClassLoader $classLoader
      *
      * @return int
      */
-    public function run($input = null, $output = null, $app = null, $commandFiles = [])
+    public function run($input = null, $output = null, $app = null, $commandFiles = [], $classLoader = null)
     {
         // Create default input and output objects if they were not provided
         if (!$input) {
@@ -146,7 +163,7 @@ class Runner implements ContainerAwareInterface
             $userConfig = 'robo.yml';
             $roboAppConfig = dirname(__DIR__) . '/robo.yml';
             $config = Robo::createConfiguration([$userConfig, $roboAppConfig]);
-            $container = Robo::createDefaultContainer($input, $output, $app, $config);
+            $container = Robo::createDefaultContainer($input, $output, $app, $config, $classLoader);
             $this->setContainer($container);
             // Automatically register a shutdown function and
             // an error handler when we provide the container.
@@ -156,11 +173,20 @@ class Runner implements ContainerAwareInterface
         if (!$app) {
             $app = Robo::application();
         }
-        if (!isset($commandFiles)) {
-            $this->errorCondtion("Robo is not initialized here. Please run `robo init` to create a new RoboFile.", 'yellow');
-            $app->addInitRoboFileCommand($this->roboFile, $this->roboClass);
-            $commandFiles = [];
+        if ($app instanceof \Robo\Application) {
+            $app->addSelfUpdateCommand($this->getSelfUpdateRepository());
+            if (!isset($commandFiles)) {
+                $this->errorCondition("Robo is not initialized here. Please run `robo init` to create a new RoboFile.", 'yellow');
+                $app->addInitRoboFileCommand($this->roboFile, $this->roboClass);
+                $commandFiles = [];
+            }
         }
+
+        if (!empty($this->relativePluginNamespace)) {
+            $commandClasses = $this->discoverCommandClasses($this->relativePluginNamespace);
+            $commandFiles = array_merge((array)$commandFiles, $commandClasses);
+        }
+
         $this->registerCommandClasses($app, $commandFiles);
 
         try {
@@ -202,6 +228,20 @@ class Runner implements ContainerAwareInterface
         foreach ((array)$commandClasses as $commandClass) {
             $this->registerCommandClass($app, $commandClass);
         }
+    }
+
+    /**
+     * @param $relativeNamespace
+     *
+     * @return array|string[]
+     */
+    protected function discoverCommandClasses($relativeNamespace)
+    {
+        /** @var \Robo\ClassDiscovery\RelativeNamespaceDiscovery $discovery */
+        $discovery = Robo::service('relativeNamespaceDiscovery');
+        $discovery->setRelativeNamespace($relativeNamespace.'\Commands')
+            ->setSearchPattern('*Commands.php');
+        return $discovery->getClasses();
     }
 
     /**
@@ -437,5 +477,46 @@ class Runner implements ContainerAwareInterface
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSelfUpdateRepository()
+    {
+        return $this->selfUpdateRepository;
+    }
+
+    /**
+     * @param $selfUpdateRepository
+     *
+     * @return $this
+     */
+    public function setSelfUpdateRepository($selfUpdateRepository)
+    {
+        $this->selfUpdateRepository = $selfUpdateRepository;
+        return $this;
+    }
+
+    /**
+     * @param \Composer\Autoload\ClassLoader $classLoader
+     *
+     * @return $this
+     */
+    public function setClassLoader(ClassLoader $classLoader)
+    {
+        $this->classLoader = $classLoader;
+        return $this;
+    }
+
+    /**
+     * @param string $relativeNamespace
+     *
+     * @return $this
+     */
+    public function setRelativePluginNamespace($relativeNamespace)
+    {
+        $this->relativePluginNamespace = $relativeNamespace;
+        return $this;
     }
 }
