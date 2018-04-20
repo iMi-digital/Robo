@@ -91,8 +91,8 @@ class Application extends SymfonyApplication {
                            . "\nif (\\Robo\\Robo::APPLICATION_NAME != 'iRobo'"
                            . "\n    || \\Composer\\Semver\\Comparator::lessThan(\\Robo\\Robo::VERSION, IROBO_MIN_VERSION)) {"
                            . "\n    echo 'ERROR: This script needs iRobo, a fork of robo.li, version ' . IROBO_MIN_VERSION"
-                           . "\n        . ' or later - download at http://irobo.imi.de/irobo.phar or use irobo self-update to update'. PHP_EOL;"
-                           . "\n    return;"
+                           . "\n        . ' or later - download at http://irobo.imi.de/irobo.phar or use irobo self:update to update'. PHP_EOL;"
+                           . "\n    die(1);"
                            . "\n}"
                            . "\n";
 
