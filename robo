@@ -18,7 +18,7 @@ $classLoader = require $autoloaderPath;
 $runner = new \Robo\Runner();
 $runner
   ->setRelativePluginNamespace('Robo\Plugin')
-  ->setSelfUpdateRepository('consolidation/robo')
+  ->setSelfUpdateRepository('iMi-digital/iRobo')
   ->setClassLoader($classLoader);
 $statusCode = $runner->execute($_SERVER['argv']);
 exit($statusCode);
