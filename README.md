@@ -36,4 +36,5 @@ Download using [phar.io](https://phar.io) / Phive:
 2. Commit and `git push`; `git push --tags`
 3. `./robo phar:build`
 4. check `./robo.phar`
-5. `./robo irobo:phar-publish`
+5. `./robo irobo:phar-sign`
+6. `./robo irobo:phar-publish`
