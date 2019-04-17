@@ -38,3 +38,6 @@ Download using [phar.io](https://phar.io) / Phive:
 4. check `./robo.phar`
 5. `./robo irobo:phar-sign`
 6. `./robo irobo:phar-publish`
+
+
+To use irobo:phar-pushlish you need to add github-release from https://github.com/aktau/github-release/releases/tag/v0.7.2 to your /bin.
