@@ -448,8 +448,8 @@ class RoboFile extends \Robo\Tasks
 
     public function iroboSign()
     {
-        // signing key: a.menk@imi.de
-        $this->_exec('gpg -u 5AECD819 --detach-sign --output robo.phar.asc robo.phar');
+        // signing key: release-signing-key@imi.de
+        $this->_exec('gpg -u 44A80B803D2DB626 --detach-sign --output robo.phar.asc robo.phar');
     }
 
 
