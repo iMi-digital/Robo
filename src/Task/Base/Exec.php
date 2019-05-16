@@ -107,13 +107,16 @@ class Exec extends BaseTask implements CommandInterface, PrintedInterface, Simul
      */
     public function run()
     {
-        $result_data = $this->execute(new Process($this->getCommand()));
+        $this->hideProgressIndicator();
+        // TODO: Symfony 4 requires that we supply the working directory.
+        $result_data = $this->execute(new Process($this->getCommand(), getcwd()));
         return new Result(
             $this,
             $result_data->getExitCode(),
             $result_data->getMessage(),
             $result_data->getData()
         );
+        $this->showProgressIndicator();
     }
 }
 

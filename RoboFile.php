@@ -73,6 +73,8 @@ class RoboFile extends \Robo\Tasks
      */
     public function release($opts = ['beta' => false])
     {
+        $this->checkPharReadonly();
+
         $version = \Robo\Robo::VERSION;
         $stable = !$opts['beta'];
         if ($stable) {
@@ -332,6 +334,8 @@ class RoboFile extends \Robo\Tasks
      */
     public function pharBuild()
     {
+        $this->checkPharReadonly();
+
         // Create a collection builder to hold the temporary
         // directory until the pack phar task runs.
         $collection = $this->collectionBuilder();
@@ -373,7 +377,8 @@ class RoboFile extends \Robo\Tasks
                 ->args($devProjectsToRemove)
             ->taskComposerInstall()
                 ->dir($roboBuildDir)
-                ->printed(false)
+                ->noScripts()
+                ->printed(true)
                 ->run();
 
         // Exit if the preparation step failed
@@ -402,6 +407,13 @@ class RoboFile extends \Robo\Tasks
             ->taskFilesystemStack()
                 ->chmod('robo.phar', 0777)
             ->run();
+    }
+
+    protected function checkPharReadonly()
+    {
+        if (ini_get('phar.readonly')) {
+            throw new \Exception('Must set "phar.readonly = Off" in php.ini to build phars.');
+        }
     }
 
     /**
@@ -433,6 +445,14 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
+
+    public function iroboSign()
+    {
+        // signing key: release-signing-key@imi.de
+        $this->_exec('gpg -u 44A80B803D2DB626 --detach-sign --output robo.phar.asc robo.phar');
+    }
+
+
 	/**
 	 * Publish iRobo to github
 	 *
@@ -447,11 +467,25 @@ class RoboFile extends \Robo\Tasks
 		    ->exec('github-release release --security-token ' . escapeshellarg($token)
 		           . ' --user imi-digital --repo iRobo'
 		           . ' --tag ' . escapeshellarg($tag))
+            // we upload a .phar and the same file without extension
+            // .phar seems to be needed for Phive installer
+		    ->exec('github-release upload --security-token ' . escapeshellarg($token)
+		           . ' --user imi-digital --repo iRobo'
+		           . ' --tag ' . escapeshellarg($tag)
+		           . ' --file robo.phar'
+			       . ' --name irobo.phar'
+		    )
 		    ->exec('github-release upload --security-token ' . escapeshellarg($token)
 		           . ' --user imi-digital --repo iRobo'
 		           . ' --tag ' . escapeshellarg($tag)
 		           . ' --file robo.phar'
 			       . ' --name irobo'
+		    )
+		    ->exec('github-release upload --security-token ' . escapeshellarg($token)
+		           . ' --user imi-digital --repo iRobo'
+		           . ' --tag ' . escapeshellarg($tag)
+		           . ' --file robo.phar.asc'
+			       . ' --name irobo.phar.asc'
 		    )
 		    ->run();
     }

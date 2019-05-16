@@ -24,12 +24,11 @@ chmod +x irobo.phar && sudo mv irobo.phar /usr/bin/irobo
 
 Now you can use it just like `irobo`.
 
+### Using Phive
 
-# Development
+Download using [phar.io](https://phar.io) / Phive:
 
-    ./robo irobo:phar-publish
-
-needs https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2 to publish on GitHub
+`sudo phive install -g iMi-digital/irobo`
 
 ### Release Process
 
@@ -37,4 +36,5 @@ needs https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd
 2. Commit and `git push`; `git push --tags`
 3. `./robo phar:build`
 4. check `./robo.phar`
-5. `./robo irobo:phar-publish`
+5. `./robo irobo:phar-sign`
+6. `./robo irobo:phar-publish`

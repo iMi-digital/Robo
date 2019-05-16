@@ -14,7 +14,7 @@ class RsyncTest extends \Codeception\TestCase\Test
 
         $winCmd = 'rsync --recursive --exclude .git --exclude .svn --exclude .hg --checksum --whole-file --verbose --progress --human-readable --stats src/ "dev@localhost:/var/www/html/app/"';
 
-        $cmd = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? $winCmd : $linuxCmd;
+        $cmd = stripos(PHP_OS, 'WIN') === 0 ? $winCmd : $linuxCmd;
 
         verify(
             (new \Robo\Task\Remote\Rsync())
@@ -37,7 +37,7 @@ class RsyncTest extends \Codeception\TestCase\Test
 
         $winCmd = 'rsync "src/foo bar/baz" "dev@localhost:/var/path/with/a space"';
 
-        $cmd = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? $winCmd : $linuxCmd;
+        $cmd = stripos(PHP_OS, 'WIN') === 0 ? $winCmd : $linuxCmd;
 
         // From the folder 'foo bar' (with space) in 'src' directory
         verify(
@@ -53,7 +53,7 @@ class RsyncTest extends \Codeception\TestCase\Test
 
         $winCmd = 'rsync src/foo src/bar "dev@localhost:/var/path/with/a space"';
 
-        $cmd = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? $winCmd : $linuxCmd;
+        $cmd = stripos(PHP_OS, 'WIN') === 0 ? $winCmd : $linuxCmd;
 
         // Copy two folders, 'src/foo' and 'src/bar'
         verify(
@@ -62,6 +62,23 @@ class RsyncTest extends \Codeception\TestCase\Test
                 ->toHost('localhost')
                 ->toUser('dev')
                 ->toPath('/var/path/with/a space')
+                ->getCommand()
+        )->equals($cmd);
+
+        $linuxCmd = 'rsync --rsh \'ssh -i ~/.ssh/id_rsa\' src/foo \'dev@localhost:/var/path\'';
+
+        $winCmd = 'rsync --rsh "ssh -i ~/.ssh/id_rsa" src/foo "dev@localhost:/var/path"';
+
+        $cmd = stripos(PHP_OS, 'WIN') === 0 ? $winCmd : $linuxCmd;
+
+        // rsync with a remoteShell specified
+        verify(
+            (new \Robo\Task\Remote\Rsync())
+                ->fromPath('src/foo')
+                ->toHost('localhost')
+                ->toUser('dev')
+                ->toPath('/var/path')
+                ->remoteShell('ssh -i ~/.ssh/id_rsa')
                 ->getCommand()
         )->equals($cmd);
     }

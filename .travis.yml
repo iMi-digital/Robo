@@ -1,3 +1,4 @@
+dist: trusty
 language: php
 
 branches:
@@ -7,14 +8,20 @@ branches:
     - /^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*$/
 
 matrix:
+  fast_finish: true
   include:
+    - php: 7.2
+      env: 'SCENARIO=symfony4 DEPENDENCIES=highest'
     - php: 7.1
-      env: dependencies=highest
-    - php: 7.0
+      env: 'SCENARIO=symfony4'
+    - php: 7.0.11
+      env: 'DEPENDENCIES=highest'
+    - php: 7.0.11
     - php: 5.6
+    - php: 5.6
+      env: 'DEPENDENCIES=lowest'
     - php: 5.5
-    - php: 5.5
-      env: dependencies=lowest
+      env: 'SCENARIO=symfony2 DEPENDENCIES=lowest'
 
 sudo: false
 
@@ -22,14 +29,11 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-before_script:
-  - if [ -z "$dependencies" ]; then composer install --prefer-dist; fi;
-  - if [ "$dependencies" = "lowest" ]; then composer update --prefer-dist --prefer-lowest -n; fi;
-  - if [ "$dependencies" = "highest" ]; then composer update --prefer-dist -n; fi;
+install:
+  - 'composer scenario "${SCENARIO}" "${DEPENDENCIES}"'
 
 script:
-  - ./robo test --coverage
-  - ./robo sniff -n
+  - composer test
 
 after_success:
   - travis_retry php vendor/bin/coveralls -v

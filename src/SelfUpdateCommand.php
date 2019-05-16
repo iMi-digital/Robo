@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Robo;
 
 use Symfony\Component\Console\Command\Command;
@@ -23,43 +14,59 @@ use Symfony\Component\Filesystem\Filesystem as sfFilesystem;
  */
 class SelfUpdateCommand extends Command
 {
-    private $command;
+    const SELF_UPDATE_COMMAND_NAME = 'self:update';
+
+    protected $gitHubRepository;
+
+    protected $currentVersion;
+
+    protected $applicationName;
+
+    public function __construct($applicationName = null, $currentVersion = null, $gitHubRepository = null)
+    {
+        $this->applicationName = $applicationName;
+        $this->currentVersion = $currentVersion;
+        $this->gitHubRepository = $gitHubRepository;
+
+        parent::__construct(self::SELF_UPDATE_COMMAND_NAME);
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
+        $app = $this->applicationName;
+
         $this
-            ->setName('self-update')
-            ->setAliases(array( 'selfupdate' ))
-            ->setDescription('Updates the robo.phar to the latest version.')
+            ->setAliases(array('update'))
+            ->setDescription("Updates $app to the latest version.")
             ->setHelp(
                 <<<EOT
 The <info>self-update</info> command checks github for newer
-versions of robo and if found, installs the latest.
+versions of $app and if found, installs the latest.
 EOT
             );
     }
 
-    protected function getLatestReleaseFromGithub($repository)
+    protected function getLatestReleaseFromGithub()
     {
         $opts = [
             'http' => [
                 'method' => 'GET',
                 'header' => [
-                    'User-Agent: PHP'
+                    'User-Agent: ' . $this->applicationName  . ' (' . $this->gitHubRepository . ')' . ' Self-Update (PHP)'
                 ]
             ]
         ];
 
         $context = stream_context_create($opts);
 
-        $releases = file_get_contents('https://api.github.com/repos/' . $repository . '/releases', false, $context);
+        $releases = file_get_contents('https://api.github.com/repos/' . $this->gitHubRepository . '/releases', false, $context);
         $releases = json_decode($releases);
 
         if (! isset($releases[0])) {
-            throw new \Exception('API error - no release found at GitHub repository ' . $repository);
+            throw new \Exception('API error - no release found at GitHub repository ' . $this->gitHubRepository);
         }
 
         $version = $releases[0]->tag_name;
@@ -73,6 +80,10 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (empty(\Phar::running())) {
+            throw new \Exception(self::SELF_UPDATE_COMMAND_NAME . ' only works when running the phar version of ' . $this->applicationName . '.');
+        }
+
         $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $programName   = basename($localFilename);
         $tempFilename  = dirname($localFilename) . '/' . basename($localFilename, '.phar') . '-temp.phar';
@@ -87,21 +98,21 @@ EOT
 
         if (! is_writable($localFilename)) {
             throw new \Exception(
-                $programName . ' update failed: the "' . $localFilename . '" file could not be written'
+                $programName . ' update failed: the "' . $localFilename . '" file could not be written (execute with sudo)'
             );
         }
 
-        list( $latest, $downloadUrl ) = $this->getLatestReleaseFromGithub('iMi-digital/iRobo');
+        list( $latest, $downloadUrl ) = $this->getLatestReleaseFromGithub();
 
 
-        if (Robo::VERSION == $latest) {
+        if ($this->currentVersion == $latest) {
             $output->writeln('No update available');
             return;
         }
 
         $fs = new sfFilesystem();
 
-        $output->writeln('Downloading ' . Robo::APPLICATION_NAME . ' ' . $latest);
+        $output->writeln('Downloading ' . $this->applicationName . ' (' . $this->gitHubRepository . ') ' . $latest);
 
         $fs->copy($downloadUrl, $tempFilename);
 
