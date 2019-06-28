@@ -33,7 +33,7 @@
         "symfony/filesystem": "^2.5|^3|^4",
         "symfony/event-dispatcher": "^2.5|^3|^4",
         "brad-jones/robo-tasks": "^0.3.3",
-        "imi/robo-pack": "^2.4.1",
+        "imi/robo-pack": "^2.6",
         "composer/semver": "^1.4",
         "vlucas/phpdotenv": "^2.6.1"
     },
