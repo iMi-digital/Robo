@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b78da9be7035392d0c841d245236b9ac",
+    "content-hash": "c1a8956e7b366ae18150f626e0611585",
     "packages": [
         {
             "name": "brad-jones/robo-runner",
@@ -1022,16 +1022,16 @@
         },
         {
             "name": "imi/robo-pack",
-            "version": "2.5.1",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iMi-digital/robo-pack.git",
-                "reference": "fea696a2da4a1ab83993e969a114e0f75ac41c13"
+                "reference": "df800c05d6688eaa8b5776938f60c24b780acd51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/fea696a2da4a1ab83993e969a114e0f75ac41c13",
-                "reference": "fea696a2da4a1ab83993e969a114e0f75ac41c13",
+                "url": "https://api.github.com/repos/iMi-digital/robo-pack/zipball/df800c05d6688eaa8b5776938f60c24b780acd51",
+                "reference": "df800c05d6688eaa8b5776938f60c24b780acd51",
                 "shasum": ""
             },
             "require": {
@@ -1060,7 +1060,7 @@
                 }
             ],
             "description": "iMi Package Tasks for Robo task runner",
-            "time": "2018-04-20T14:38:02+00:00"
+            "time": "2019-06-28T12:56:02+00:00"
         },
         {
             "name": "imi/robo-run",
@@ -3723,7 +3723,6 @@
                 "mock",
                 "xunit"
             ],
-            "abandoned": true,
             "time": "2017-06-30T09:13:00+00:00"
         },
         {
