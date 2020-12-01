@@ -1,4 +1,5 @@
 <?php
+
 namespace Robo;
 
 use Composer\Autoload\ClassLoader;
@@ -20,13 +21,13 @@ use Symfony\Component\Process\Process;
 class Robo
 {
     const APPLICATION_NAME = 'iRobo';
-    const VERSION = '2.6.0';
-	const ROBO_BASE_VERSION = '1.2.4-dev';
+    const VERSION = '2.7.0';
+    const ROBO_BASE_VERSION = '2.2.2-dev';
 
     /**
      * The currently active container object, or NULL if not initialized yet.
      *
-     * @var ContainerInterface|null
+     * @var \League\Container\ContainerInterface|null
      */
     protected static $container;
 
@@ -38,6 +39,7 @@ class Robo
      * @param null|string $appName
      * @param null|string $appVersion
      * @param null|\Symfony\Component\Console\Output\OutputInterface $output
+     * @param null|string $repository
      *
      * @return int
      */
@@ -52,7 +54,7 @@ class Robo
     /**
      * Sets a new global container.
      *
-     * @param ContainerInterface $container
+     * @param \League\Container\ContainerInterface $container
      *   A new container instance to replace the current.
      */
     public static function setContainer(ContainerInterface $container)
@@ -95,6 +97,10 @@ class Robo
 
     /**
      * Create a config object and load it from the provided paths.
+     *
+     * @param string[] $paths
+     *
+     * @return \Consolidation\Config\ConfigInterface
      */
     public static function createConfiguration($paths)
     {
@@ -105,6 +111,9 @@ class Robo
 
     /**
      * Use a simple config loader to load configuration values from specified paths
+     *
+     * @param string[] $paths
+     * @param null|\Consolidation\Config\ConfigInterface $config
      */
     public static function loadConfiguration($paths, $config = null)
     {
@@ -128,7 +137,7 @@ class Robo
      * @param null|\Symfony\Component\Console\Input\InputInterface $input
      * @param null|\Symfony\Component\Console\Output\OutputInterface $output
      * @param null|\Robo\Application $app
-     * @param null|ConfigInterface $config
+     * @param null|\Consolidation\Config\ConfigInterface $config
      * @param null|\Composer\Autoload\ClassLoader $classLoader
      *
      * @return \League\Container\Container|\League\Container\ContainerInterface
@@ -175,7 +184,7 @@ class Robo
      *
      * @param \League\Container\ContainerInterface $container
      * @param \Symfony\Component\Console\Application $app
-     * @param ConfigInterface $config
+     * @param \Consolidation\Config\ConfigInterface $config
      * @param null|\Symfony\Component\Console\Input\InputInterface $input
      * @param null|\Symfony\Component\Console\Output\OutputInterface $output
      * @param null|\Composer\Autoload\ClassLoader $classLoader
@@ -238,10 +247,14 @@ class Robo
             ->withMethodCall('addDefaultSimplifiers', []);
         $container->share('prepareTerminalWidthOption', \Consolidation\AnnotatedCommand\Options\PrepareTerminalWidthOption::class)
             ->withMethodCall('setApplication', ['application']);
+        $container->share('symfonyStyleInjector', \Robo\Symfony\SymfonyStyleInjector::class);
+        $container->share('parameterInjection', \Consolidation\AnnotatedCommand\ParameterInjection::class)
+            ->withMethodCall('register', ['Symfony\Component\Console\Style\SymfonyStyle', 'symfonyStyleInjector']);
         $container->share('commandProcessor', \Consolidation\AnnotatedCommand\CommandProcessor::class)
             ->withArgument('hookManager')
             ->withMethodCall('setFormatterManager', ['formatterManager'])
             ->withMethodCall('addPrepareFormatter', ['prepareTerminalWidthOption'])
+            ->withMethodCall('setParameterInjection', ['parameterInjection'])
             ->withMethodCall(
                 'setDisplayErrorFunction',
                 [
@@ -251,6 +264,7 @@ class Robo
                     }
                 ]
             );
+        $container->share('stdinHandler', \Consolidation\AnnotatedCommand\Input\StdinHandler::class);
         $container->share('commandFactory', \Consolidation\AnnotatedCommand\AnnotatedCommandFactory::class)
             ->withMethodCall('setCommandProcessor', ['commandProcessor']);
         $container->share('relativeNamespaceDiscovery', \Robo\ClassDiscovery\RelativeNamespaceDiscovery::class)
@@ -310,6 +324,8 @@ class Robo
             ->invokeMethod('setHookManager', ['hookManager']);
         $container->inflector(\Robo\Contract\VerbosityThresholdInterface::class)
             ->invokeMethod('setOutputAdapter', ['outputAdapter']);
+        $container->inflector(\Consolidation\AnnotatedCommand\Input\StdinAwareInterface::class)
+            ->invokeMethod('setStdinHandler', ['stdinHandler']);
     }
 
     /**
@@ -356,7 +372,7 @@ class Robo
     }
 
     /**
-     * @return ConfigInterface
+     * @return \Consolidation\Config\ConfigInterface
      */
     public static function config()
     {
@@ -399,6 +415,9 @@ class Robo
         return static::service('input');
     }
 
+    /**
+     * @return \Robo\Common\ProcessExecutor
+     */
     public static function process(Process $process)
     {
         return ProcessExecutor::create(static::getContainer(), $process);

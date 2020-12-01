@@ -21,6 +21,7 @@ Class Build
 @package Robo\Task\Docker
 
 * `tag($tag)`   * `param string` $tag
+* `enableBuildKit()`   * `return` $this
 * `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values
@@ -50,7 +51,7 @@ $task->dockerCommit($result)
      ->run();
 ```
 
-* `name($name)`   * `param` $name
+* `name($name)`   * `param string` $name
 * `dir($dir)`  Changes working directory of command
 * `arg($arg)`  Pass argument to executable. Its value will be automatically escaped.
 * `args($args)`  Pass methods parameters as arguments to executable. Argument values

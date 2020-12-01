@@ -2,6 +2,7 @@
 
 namespace Robo;
 
+use SelfUpdate\SelfUpdateCommand;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -72,5 +73,20 @@ class Application extends SymfonyApplication
             $output->writeln("<comment>  Edit this file to add your commands! </comment>");
         });
         $this->add($createRoboFile);
+    }
+
+    /**
+     * Add self update command, do nothing if null is provided
+     *
+     * @param string $repository
+     *   GitHub Repository for self update.
+     */
+    public function addSelfUpdateCommand($repository = null)
+    {
+        if (!$repository || empty(\Phar::running())) {
+            return;
+        }
+        $selfUpdateCommand = new SelfUpdateCommand($this->getName(), $this->getVersion(), $repository);
+        $this->add($selfUpdateCommand);
     }
 }

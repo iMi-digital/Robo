@@ -8,6 +8,7 @@ use Consolidation\OutputFormatters\Options\FormatterOptions;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Consolidation\OutputFormatters\StructuredData\PropertyList;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Example Robo Plugin Commands.
@@ -63,6 +64,34 @@ class ExampleCommands extends \Robo\Tasks
     }
 
     /**
+     * Demonstrate Robo configuration.
+     *
+     * Config values are loaded from the followig locations:
+     *
+     *  - [Robo Project]/robo.yml
+     *  - $HOME/.robo/robo.yml
+     *  - $CWD/robo.yml
+     *  - Environment variables ROBO_CONFIG_KEY (e.g. ROBO_OPTIONS_PROGRESS_DELAY)
+     *  - Overridden on the commandline via -Doptions.progress-delay=value
+     *
+     * @param string $key Name of the option to read (e.g. options.progress-delay)
+     * @option opt An option whose value is printed. Can be overridden in
+     *   configuration via the configuration key command.try.config.options.opt.
+     * @option show-all Also print out the value of all configuration options
+     */
+    public function tryConfig($key = 'options.progress-delay', $options = ['opt' => '0', 'show-all' => false])
+    {
+        $value = \Robo\Robo::config()->get($key);
+
+        $this->say("The value of $key is " . var_export($value, true));
+        $this->say("The value of --opt (command.try.config.options.opt) is " . var_export($options['opt'], true));
+
+        if ($options['show-all']) {
+            $this->say(var_export(\Robo\Robo::config()->export(), true) . "\n");
+        }
+    }
+
+    /**
      * Demonstrates serial execution.
      *
      * @option $printed Print the output of each process.
@@ -87,6 +116,16 @@ class ExampleCommands extends \Robo\Tasks
     }
 
     /**
+     * Demonstrates capturing output from taskExec
+     */
+    public function tryCaptureExec()
+    {
+        $result = $this->taskExec('echo')->args(['one', 'two', 'three'])->printOutput(false)->run();
+
+        $this->say('Captured output from exec >>> ' . $result->getOutputData());
+    }
+
+    /**
      * Demonstrates parallel execution.
      *
      * @option $printed Print the output of each process.
@@ -96,7 +135,7 @@ class ExampleCommands extends \Robo\Tasks
     {
         $dir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
         $para = $this->taskParallelExec()
-            ->printed($options['printed'])
+            ->printOutput($options['printed'])
             ->process("php $dir/tests/_data/parascript.php hey 4")
             ->process("php $dir/tests/_data/parascript.php hoy 3")
             ->process("php $dir/tests/_data/parascript.php gou 2")
@@ -129,17 +168,40 @@ class ExampleCommands extends \Robo\Tasks
     /**
      * Demonstrate Robo variable argument passing.
      *
-     * @param $a A list of commandline parameters.
+     * @param array $a A list of commandline parameters.
+     * @param array $options
      */
-    public function tryArrayArgs(array $a)
+    public function tryArrayArgs(array $a, array $options = ['foo' => []])
     {
         $this->say("The parameters passed are:\n" . var_export($a, true));
+        if (!empty($options['foo'])) {
+            $this->say("The options passed via --foo are:\n" . var_export($options['foo'], true));
+        }
+    }
+
+    /**
+     * Demonstrate use of Symfony $input object in Robo in place of
+     * the usual "parameter arguments".
+     *
+     * @arg array $a A list of commandline parameters.
+     * @option foo
+     * @default a []
+     * @default foo []
+     */
+    public function trySymfony(InputInterface $input)
+    {
+        $a = $input->getArgument('a');
+        $this->say("The parameters passed are:\n" . var_export($a, true));
+        $foo = $input->getOption('foo');
+        if (!empty($foo)) {
+            $this->say("The options passed via --foo are:\n" . var_export($foo, true));
+        }
     }
 
     /**
      * Demonstrate Robo boolean options.
      *
-     * @param $opts The options.
+     * @param array $opts The options.
      * @option boolean $silent Supress output.
      */
     public function tryOptbool($opts = ['silent|s' => false])

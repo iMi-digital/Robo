@@ -113,6 +113,8 @@ Any task may also implement \Robo\Contract\RollbackInterface; if this is done, t
 
 Use `addAsCompletion($collection)` in place of `addAsRollback($collection)`, or implement \Robo\Contract\CompletionInterface. Completions otherwise work exactly like rollbacks.
 
+By default, rollbacks and completions tasks or callbacks continue even if errors occur. If you would like to explicitly cancel or abort the rollback or completion, you may throw the `\Robo\Exception\AbortTasksException` exception.
+
 ### Rollback and Completion Callbacks
 
 You may also provide arbitrary methods as `callable`s to serve as rollback or completion functions, as shown below:
@@ -130,7 +132,7 @@ Since the concept of temporary objects that are cleaned up  on failure is a comm
 
 ### Temporary Directories
 
-It is recommended that operations that perform multiple filesystem operations should, whenever possible, do most of their work in a temporary directory. Temporary directories are created by `$this->taskTmpDir()`, and are automatically be removed when the collection completes or rolls back. As an added convenience, the CollectionBuilder class has a `tmpDir()` method that creates a temporary directory via `taskTmpDir()`, and then returns the path to the temporary directory.
+It is recommended that operations that perform multiple filesystem operations should, whenever possible, do most of their work in a temporary directory. Temporary directories are created by `$this->taskTmpDir()`, and are automatically removed when the collection completes or rolls back. As an added convenience, the CollectionBuilder class has a `tmpDir()` method that creates a temporary directory via `taskTmpDir()`, and then returns the path to the temporary directory.
 
 ``` php
 <?php

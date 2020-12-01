@@ -127,14 +127,21 @@ The default value for options must be one of:
 
 No other values should be used for the default value. For example, `$options = ['a' => 1]` is **incorrect**; instead, use `$options = ['a' => '1']`. Similarly, `$options = ['a' => true]` is unsupported, or at least not useful, as this would indicate that the value of `--a` was always `true`, whether or not it appeared on the command line.
 
-### Load From Other Directories
+### Load From Other Robofile
 
-Robo can execute commands from a RoboFile located in different directory.
+Robo can execute commands from a different RoboFile, eg. located in different directory or with a different filename.  
 You can specify the path to another RoboFile by including the `--load-from` option:
 
 ```
-robo run --load-from /path/to/my/other/project
+robo run --load-from /path/to/my/other/robofile
 ```
+
+Additional notes:
+
+- The filename can be anything; it is not limited to `RoboFile.php`.
+- The class name inside the file has to be the same name as the file has.
+- The class has to be in the root namespace. Eg. `Foo.php => \Foo`
+- The internal current directory (cwd) of the PHP process will be switched to the directory where the provided RoboFile came from.
 
 ### Pass-Through Arguments
 
@@ -294,7 +301,9 @@ Some tasks may also attach data to the Result object.  If this is done, the data
 
 Commands should return a Result object obtained from a task; this will ensure that the command exit code is set correctly.  If a command does not have a Result object available, then it may use a ResultData object.  ResultData objects are just like Result objects, except the do not contain a reference to a task.
 
+```
 return new Robo\ResultData($exitcode, 'Error message.');
+```
 
 If the command returns a TaskInterface instead of a result, then the task will be executed, and the result from that task will be used as the final result of the command. See also `Formatters`, below.
 
@@ -356,9 +365,13 @@ Note that when using [Collections](collections.md), the progress bar will automa
 
 ## Configuration
 
-On startup, Robo will load a configuration file, `robo.yml`, if it exists in the current working directory.
+On startup, Robo will load a configuration file, `robo.yml`, if it exists in the current working directory, or in the directory $HOME/.robo/robo.yml, or at the path set by the `ROBO_CONFIG` environment variable. If both the user's `robo.yml` file and a `robo.yml` in the current working directory exist, then both will be loaded, with values from the configuration file in the current working directory taking precedence over the values in the user's configuration file.
 
-**Note:** The configuration features below are experimental. Changes that break compatibility may be introduced until it is declared stable in the 1.1.0 release.
+Environment variables can also be used to set individual configuration values. The environment variable key should start with the string `ROBO_`, and should be followed by an all-uppercase version of the configuration key, with spaces, dashes and dots converted to underscores. For example, to set the progress bar delay to 999999 seconds:
+```
+export ROBO_OPTIONS_PROGRESS_DELAY=999999
+```
+Configuration values may also be set via the `-D` commandline switch. The above effect can also be achieved by adding `-Doptions.progress-delay=999999` to any Robo command.
 
 ### Configuration for Command Options
 
@@ -489,7 +502,7 @@ In addition, Robo makes all of the methods of Symfony Style available through th
 $this->io()->title("Build all site assets");
 ```
 
-This allows Robo scripts to follow the [Symfony Console Style Guide](http://symfony.com/blog/new-in-symfony-2-8-console-style-guide) if desired.
+This allows Robo scripts to follow the documentation on [How to Style a Console Command](https://symfony.com/doc/current/console/style.html) if desired.
 
 ### Formatters
 

@@ -46,7 +46,7 @@ $this->taskExecStack()
 ```
 
 * `executable($executable)`   * `param string` $executable
-* `exec($command)`   * `param string|string[]` $command
+* `exec($command)`   * `param string|string[]|CommandInterface` $command
 * `stopOnFail($stopOnFail = null)`   * `param bool` $stopOnFail
 * `result($result)` 
 * `dir($dir)`  Changes working directory of command
@@ -97,17 +97,53 @@ $this->taskSymfonyCommand(new ModelGeneratorCommand())
 
 Runs task when specified file or dir was changed.
 Uses Lurker library.
+Monitor third parameter takes Lurker filesystem events types to watch.
+By default its set to MODIFY event.
 
 ``` php
 <?php
 $this->taskWatch()
- ->monitor('composer.json', function() {
-     $this->taskComposerUpdate()->run();
-})->monitor('src', function() {
-     $this->taskExec('phpunit')->run();
-})->run();
+     ->monitor(
+         'composer.json',
+         function() {
+             $this->taskComposerUpdate()->run();
+         }
+     )->monitor(
+         'src',
+         function() {
+             $this->taskExec('phpunit')->run();
+         },
+         \Lurker\Event\FilesystemEvent::ALL
+     )->monitor(
+         'migrations',
+         function() {
+             //do something
+         },
+         [
+             \Lurker\Event\FilesystemEvent::CREATE,
+             \Lurker\Event\FilesystemEvent::DELETE
+         ]
+     )->run();
 ?>
 ```
 
-* `monitor($paths, $callable)`   * `param string|string[]` $paths
+Pass through the changed file to the callable function
+
+```
+$this
+ ->taskWatch()
+ ->monitor(
+     'filename',
+     function ($event) {
+         $resource = $event->getResource();
+         ... do something with (string)$resource ...
+     },
+     FilesystemEvent::ALL
+ )
+ ->run();
+```
+
+The $event parameter is a [standard Symfony file resource object](https://api.symfony.com/3.1/Symfony/Component/Config/Resource/FileResource.html)
+
+* `monitor($paths, $callable, $events = null)`   * `param string|string[]` $paths
 

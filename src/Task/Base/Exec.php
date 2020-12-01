@@ -1,4 +1,5 @@
 <?php
+
 namespace Robo\Task\Base;
 
 use Robo\Common\ExecTrait;
@@ -50,9 +51,6 @@ class Exec extends BaseTask implements CommandInterface, PrintedInterface, Simul
         $this->command = $this->receiveCommand($command);
     }
 
-    /**
-     *
-     */
     public function __destruct()
     {
         $this->stop();
@@ -60,6 +58,8 @@ class Exec extends BaseTask implements CommandInterface, PrintedInterface, Simul
 
     /**
      * Executes command in background mode (asynchronously)
+     *
+     * @param bool $arg
      *
      * @return $this
      */
@@ -109,14 +109,15 @@ class Exec extends BaseTask implements CommandInterface, PrintedInterface, Simul
     {
         $this->hideProgressIndicator();
         // TODO: Symfony 4 requires that we supply the working directory.
-        $result_data = $this->execute(new Process($this->getCommand(), getcwd()));
-        return new Result(
+        $result_data = $this->execute(Process::fromShellCommandline($this->getCommand(), getcwd()));
+        $result = new Result(
             $this,
             $result_data->getExitCode(),
             $result_data->getMessage(),
             $result_data->getData()
         );
         $this->showProgressIndicator();
+        return $result;
     }
 }
 
